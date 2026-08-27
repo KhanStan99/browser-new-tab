@@ -1,0 +1,4350 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="referrer" content="no-referrer" />
+    <title>Home</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233862e0'/%3E%3Cpath d='M8 15.5 16 9l8 6.5V24a1 1 0 0 1-1 1h-5v-6h-4v6H9a1 1 0 0 1-1-1z' fill='white'/%3E%3C/svg%3E"
+    />
+    <style>
+      /* ============================== design tokens ============================== */
+      :root {
+        --bg: #f4f5f7;
+        --bg-elev: #ffffff;
+        --bg-hover: #f0f2f5;
+        --sunken: #e9ebef;
+        --text: #15171c;
+        --dim: #5a6070;
+        --faint: #8b90a0;
+        --border: #e2e5ea;
+        --border-2: #ced3dc;
+        --accent: #3862e0;
+        --accent-soft: rgba(56, 98, 224, 0.1);
+        --on-accent: #ffffff;
+        --danger: #c93a3a;
+        --danger-soft: rgba(201, 58, 58, 0.1);
+        --shadow-1:
+          0 1px 2px rgba(20, 22, 28, 0.05), 0 2px 8px rgba(20, 22, 28, 0.05);
+        --shadow-2: 0 10px 34px rgba(20, 22, 28, 0.16);
+        --radius: 12px;
+        --radius-sm: 8px;
+        --n1: #fff6c9;
+        --n2: #d9f2de;
+        --n3: #dbe9ff;
+        --n4: #ffe0e6;
+        --n5: #eee1ff;
+        --n6: #e7ecf1;
+        /* veil drawn over the backdrop photo so every existing text colour stays legible */
+        --scrim-top: rgba(240, 242, 246, 0.92);
+        --scrim-body: rgba(240, 242, 246, 0.58);
+        --glass: rgba(255, 255, 255, 0.76);
+        --glass-sunken: rgba(120, 130, 150, 0.13);
+      }
+      /* dark palette — KEEP THE TWO BLOCKS BELOW IN SYNC */
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #0f1115;
+          --bg-elev: #171a20;
+          --bg-hover: #1e222a;
+          --sunken: #12141a;
+          --text: #e8eaef;
+          --dim: #9aa1b1;
+          --faint: #6c7382;
+          --border: #252a33;
+          --border-2: #333a46;
+          --accent: #7d99ff;
+          --accent-soft: rgba(125, 153, 255, 0.14);
+          --on-accent: #0f1115;
+          --danger: #ff7070;
+          --danger-soft: rgba(255, 112, 112, 0.14);
+          --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+          --shadow-2: 0 12px 36px rgba(0, 0, 0, 0.55);
+          --n1: #3c3620;
+          --n2: #1f3326;
+          --n3: #1e2a40;
+          --n4: #3a2129;
+          --n5: #2c2340;
+          --n6: #22262e;
+          --scrim-top: rgba(12, 14, 18, 0.93);
+          --scrim-body: rgba(12, 14, 18, 0.62);
+          --glass: rgba(22, 25, 31, 0.7);
+          --glass-sunken: rgba(255, 255, 255, 0.07);
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #0f1115;
+        --bg-elev: #171a20;
+        --bg-hover: #1e222a;
+        --sunken: #12141a;
+        --text: #e8eaef;
+        --dim: #9aa1b1;
+        --faint: #6c7382;
+        --border: #252a33;
+        --border-2: #333a46;
+        --accent: #7d99ff;
+        --accent-soft: rgba(125, 153, 255, 0.14);
+        --on-accent: #0f1115;
+        --danger: #ff7070;
+        --danger-soft: rgba(255, 112, 112, 0.14);
+        --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-2: 0 12px 36px rgba(0, 0, 0, 0.55);
+        --n1: #3c3620;
+        --n2: #1f3326;
+        --n3: #1e2a40;
+        --n4: #3a2129;
+        --n5: #2c2340;
+        --n6: #22262e;
+        --scrim-top: rgba(12, 14, 18, 0.93);
+        --scrim-body: rgba(12, 14, 18, 0.62);
+        --glass: rgba(22, 25, 31, 0.7);
+        --glass-sunken: rgba(255, 255, 255, 0.07);
+      }
+
+      /* ============================== base ============================== */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html {
+        -webkit-text-size-adjust: 100%;
+        background: var(--bg);
+      }
+      body {
+        margin: 0;
+        /* the shell owns the viewport; only the panes inside it scroll */
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        font:
+          15px/1.5 -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Inter,
+          Roboto,
+          "Helvetica Neue",
+          Arial,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+      }
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+        color: inherit;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+        border-radius: 4px;
+      }
+      ::selection {
+        background: var(--accent-soft);
+      }
+      .sr {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      /* ============================== buttons ============================== */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 12px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        background: var(--bg-elev);
+        color: var(--text);
+        cursor: pointer;
+        font-size: 13.5px;
+        font-weight: 500;
+        white-space: nowrap;
+        transition:
+          background 0.12s,
+          border-color 0.12s,
+          transform 0.06s;
+      }
+      .btn:hover {
+        background: var(--bg-hover);
+        border-color: var(--border-2);
+      }
+      .btn:active {
+        transform: translateY(1px);
+      }
+      .btn-primary {
+        background: var(--accent);
+        border-color: transparent;
+        color: var(--on-accent);
+      }
+      .btn-primary:hover {
+        background: var(--accent);
+        filter: brightness(1.08);
+      }
+      .btn-danger {
+        color: var(--danger);
+        border-color: transparent;
+        background: transparent;
+      }
+      .btn-danger:hover {
+        background: var(--danger-soft);
+      }
+      .btn-ghost {
+        background: transparent;
+        border-color: transparent;
+        color: var(--dim);
+      }
+      .btn-ghost:hover {
+        background: var(--bg-hover);
+        color: var(--text);
+      }
+      .icon-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        border-radius: var(--radius-sm);
+        border: 1px solid transparent;
+        background: transparent;
+        color: var(--dim);
+        cursor: pointer;
+        transition:
+          background 0.12s,
+          color 0.12s;
+      }
+      .icon-btn:hover {
+        background: var(--bg-hover);
+        color: var(--text);
+      }
+      .icon-btn svg {
+        width: 16px;
+        height: 16px;
+        display: block;
+      }
+      .icon-btn.danger:hover {
+        background: var(--danger-soft);
+        color: var(--danger);
+      }
+
+      /* ============================== top bar ============================== */
+      .topbar {
+        flex: none;
+        position: relative;
+        z-index: 40;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+        padding: 12px clamp(14px, 1.9vw, 40px);
+        background: color-mix(in srgb, var(--bg) 88%, transparent);
+        backdrop-filter: saturate(180%) blur(12px);
+        -webkit-backdrop-filter: saturate(180%) blur(12px);
+        border-bottom: 1px solid var(--border);
+      }
+      @supports not (background: color-mix(in srgb, red, blue)) {
+        .topbar {
+          background: var(--bg);
+        }
+      }
+      .clock {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.15;
+        min-width: 118px;
+      }
+      .clock-time {
+        font-size: 22px;
+        font-weight: 650;
+        letter-spacing: -0.02em;
+        font-variant-numeric: tabular-nums;
+      }
+      .clock-sub {
+        font-size: 11.5px;
+        color: var(--faint);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .search-wrap {
+        position: relative;
+        flex: 1 1 260px;
+        max-width: 520px;
+        min-width: 180px;
+      }
+      .search-wrap svg {
+        position: absolute;
+        left: 11px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 15px;
+        height: 15px;
+        color: var(--faint);
+        pointer-events: none;
+      }
+      #search {
+        width: 100%;
+        padding: 9px 34px 9px 34px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--bg-elev);
+        transition:
+          border-color 0.12s,
+          box-shadow 0.12s;
+      }
+      #search:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-soft);
+      }
+      #search::placeholder {
+        color: var(--faint);
+      }
+      .search-clear {
+        position: absolute;
+        right: 4px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 26px;
+        height: 26px;
+      }
+      .spacer {
+        flex: 1 1 0;
+        min-width: 0;
+      }
+      .bar-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      /* ============================== layout ============================== */
+      /* ===================== app shell =====================
+         A fixed-height shell rather than a scrolling document: bookmarks on the
+         left, notes in a narrower column on the right, each scrolling
+         internally so the page itself never scrolls. Below 900px the shell is
+         abandoned (see the media query further down) because two stacked
+         columns cannot share one viewport height. */
+      .layout {
+        max-width: none;
+        margin: 0;
+        /* bottom gutter is deep enough that the fixed corner cluster never sits
+           over a note — padding on the scrolling pane only helps once you have
+           scrolled to its end, so the room has to come out of the shell */
+        padding: 14px clamp(14px, 1.9vw, 40px) 38px;
+        flex: 1 1 auto;
+        min-height: 0;
+        display: grid;
+        gap: 14px;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: minmax(0, 1fr);
+      }
+      @media (min-width: 900px) {
+        .layout {
+          /* bookmarks take everything left over; the notes column is a settled
+             reading width rather than a share, so it does not balloon on an
+             ultrawide monitor */
+          grid-template-columns: minmax(0, 1fr) clamp(270px, 21vw, 380px);
+          gap: 18px;
+        }
+      }
+      .pane {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+      .pane-body {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        /* room for the scrollbar so cards do not jump when it appears */
+        padding-right: 2px;
+      }
+      .section-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 2px 12px;
+      }
+      .section-head h2 {
+        margin: 0;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--faint);
+      }
+      .count-pill {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--faint);
+        background: var(--sunken);
+        border-radius: 999px;
+        padding: 2px 7px;
+      }
+
+      /* ============================== groups & bookmarks ============================== */
+      /* groups flow down each column then into the next, so all of them are on
+         screen at once instead of stacking full-width down a long scroll */
+      #groups {
+        columns: 300px;
+        column-gap: 12px;
+      }
+      /* On a 1440-wide screen 300px only yields three columns, which pushes the
+         last groups below the fold. Stepping the column down buys a fourth and
+         keeps everything visible; wide screens keep the roomier cards. */
+      @media (max-width: 1600px) {
+        #groups {
+          columns: 250px;
+        }
+      }
+      @media (max-width: 700px) {
+        #groups {
+          columns: auto;
+        }
+      }
+      .group {
+        break-inside: avoid;
+        background: var(--bg-elev);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-1);
+        margin-bottom: 14px;
+        overflow: hidden;
+      }
+      .group.dragging {
+        opacity: 0.45;
+      }
+      .group-head {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 9px 10px 9px 6px;
+        cursor: grab;
+        border-bottom: 1px solid transparent;
+      }
+      .group:not(.collapsed) .group-head {
+        border-bottom-color: var(--border);
+      }
+      .group-head:active {
+        cursor: grabbing;
+      }
+      .grip {
+        color: var(--faint);
+        display: flex;
+        align-items: center;
+        padding: 0 2px;
+      }
+      .grip svg {
+        width: 14px;
+        height: 14px;
+      }
+      .chevron {
+        transition: transform 0.16s;
+      }
+      .group.collapsed .chevron {
+        transform: rotate(-90deg);
+      }
+      .group-name {
+        font-weight: 620;
+        font-size: 14px;
+        flex: 0 1 auto;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .group-head .count-pill {
+        flex: none;
+      }
+      /* opacity:0 still reserves layout width — roughly 64px of every header was
+         being spent on invisible buttons, which is what forced group names to
+         ellipsize in a narrow card. Collapse the width too, and give it back on
+         hover (the name shrinks then, which is the right trade). */
+      .group-head .head-tools {
+        margin-left: auto;
+        display: flex;
+        gap: 2px;
+        opacity: 0;
+        max-width: 0;
+        overflow: hidden;
+        transition:
+          opacity 0.12s,
+          max-width 0.12s;
+      }
+      .group-head:hover .head-tools,
+      .group-head:focus-within .head-tools {
+        opacity: 1;
+        max-width: 72px;
+      }
+      .bm-grid {
+        display: grid;
+        gap: 1px;
+        padding: 5px;
+        /* a group card is ~300px wide, so this is a single column inside it;
+           on a wide single-column phone layout it still fills the row */
+        grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+      }
+      .group.collapsed .bm-grid {
+        display: none;
+      }
+      .bm {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 3px 6px;
+        border-radius: var(--radius-sm);
+        border: 1px solid transparent;
+        min-width: 0;
+        cursor: pointer;
+        transition:
+          background 0.12s,
+          border-color 0.12s;
+      }
+      .bm:hover {
+        background: var(--bg-hover);
+        border-color: var(--border);
+      }
+      .bm.dragging {
+        opacity: 0.4;
+      }
+      .bm-icon {
+        flex: none;
+        width: 17px;
+        height: 17px;
+        border-radius: 4px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 9.5px;
+        font-weight: 700;
+        color: #fff;
+        background: var(--sunken);
+      }
+      .bm-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+      }
+      .bm-text {
+        min-width: 0;
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        line-height: 1.25;
+      }
+      .bm-title {
+        font-size: 12.8px;
+        font-weight: 520;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .bm-host {
+        font-size: 11px;
+        color: var(--faint);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .bm-edit {
+        position: absolute;
+        right: 3px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 26px;
+        height: 26px;
+        opacity: 0;
+        background: var(--bg-elev);
+      }
+      .bm:hover .bm-edit,
+      .bm-edit:focus-visible {
+        opacity: 1;
+      }
+
+      /* ============================== notes ============================== */
+      /* notes stack down the right column at their natural height; the column
+         scrolls, so only a runaway note needs capping */
+      .notes-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding-bottom: 4px;
+      }
+      .notes-list .note {
+        flex: 0 0 auto;
+        margin: 0;
+        /* one enormous note must not swallow the whole column */
+        max-height: 52vh;
+      }
+      .notes-list .note textarea {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+      }
+      /* a capped note scrolls its text, so the footer needs a hard edge —
+         otherwise the line cut off above it reads as overlapping text */
+      .notes-list .note-stamp {
+        flex: none;
+        border-top: 1px solid rgba(0, 0, 0, 0.07);
+        margin-top: 2px;
+        padding-top: 6px;
+      }
+      :root[data-theme="dark"] .notes-list .note-stamp {
+        border-top-color: rgba(255, 255, 255, 0.09);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) .notes-list .note-stamp {
+          border-top-color: rgba(255, 255, 255, 0.09);
+        }
+      }
+      .note {
+        break-inside: avoid;
+        margin: 0 0 12px;
+        background: var(--note-bg, var(--n1));
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-1);
+        display: flex;
+        flex-direction: column;
+      }
+      :root[data-theme="dark"] .note {
+        border-color: rgba(255, 255, 255, 0.07);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) .note {
+          border-color: rgba(255, 255, 255, 0.07);
+        }
+      }
+      .note.dragging {
+        opacity: 0.4;
+      }
+      .note-head {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        padding: 5px 5px 0 8px;
+        min-height: 30px;
+      }
+      .note-head .grip {
+        cursor: grab;
+        margin-right: auto;
+      }
+      .note-head .note-tools {
+        display: flex;
+        gap: 1px;
+        opacity: 0;
+        transition: opacity 0.12s;
+      }
+      .note:hover .note-tools,
+      .note:focus-within .note-tools {
+        opacity: 1;
+      }
+      .note .icon-btn {
+        width: 26px;
+        height: 26px;
+        color: rgba(0, 0, 0, 0.5);
+      }
+      .note .icon-btn:hover {
+        background: rgba(0, 0, 0, 0.07);
+        color: rgba(0, 0, 0, 0.85);
+      }
+      :root[data-theme="dark"] .note .icon-btn {
+        color: rgba(255, 255, 255, 0.5);
+      }
+      :root[data-theme="dark"] .note .icon-btn:hover {
+        background: rgba(255, 255, 255, 0.09);
+        color: #fff;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) .note .icon-btn {
+          color: rgba(255, 255, 255, 0.5);
+        }
+        :root:not([data-theme="light"]) .note .icon-btn:hover {
+          background: rgba(255, 255, 255, 0.09);
+          color: #fff;
+        }
+      }
+      .note[data-pinned="1"] .pin-btn {
+        opacity: 1;
+        color: var(--text);
+      }
+      .note[data-pinned="1"] .note-tools {
+        opacity: 1;
+      }
+      .note textarea {
+        width: 100%;
+        border: 0;
+        background: transparent;
+        resize: none;
+        overflow: hidden;
+        padding: 2px 12px 12px;
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.5;
+        min-height: 44px;
+        font-family: inherit;
+      }
+      .note textarea:focus {
+        outline: none;
+      }
+      .note textarea::placeholder {
+        color: var(--faint);
+      }
+      .note-stamp {
+        padding: 0 12px 8px;
+        font-size: 10.5px;
+        color: var(--faint);
+        letter-spacing: 0.02em;
+      }
+      .swatches {
+        display: flex;
+        gap: 5px;
+        padding: 4px 8px 8px;
+        flex-wrap: wrap;
+      }
+      .swatch {
+        width: 19px;
+        height: 19px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 1.5px solid rgba(0, 0, 0, 0.14);
+        padding: 0;
+      }
+      .swatch[aria-pressed="true"] {
+        box-shadow:
+          0 0 0 2px var(--text) inset,
+          0 0 0 2px var(--bg-elev);
+      }
+
+      /* ============================== drop indicators ==============================
+         The axis is decided at drag time by measuring the list, so the marker
+         classes come in both orientations. !important because a card's own
+         box-shadow (and the heavier one it gets in art mode) is more specific
+         than a single state class, and a transient drop marker must always win. */
+      .dm-x-before {
+        box-shadow: inset 3px 0 0 0 var(--accent) !important;
+      }
+      .dm-x-after {
+        box-shadow: inset -3px 0 0 0 var(--accent) !important;
+      }
+      .dm-y-before {
+        box-shadow: inset 0 3px 0 0 var(--accent) !important;
+      }
+      .dm-y-after {
+        box-shadow: inset 0 -3px 0 0 var(--accent) !important;
+      }
+      /* on a 26px row a hairline is easy to miss, so tint the row as well */
+      .bm.dm-y-before,
+      .bm.dm-y-after,
+      .bm.dm-x-before,
+      .bm.dm-x-after {
+        background: var(--accent-soft);
+      }
+      .drop-into {
+        background: var(--accent-soft) !important;
+        border-radius: var(--radius-sm);
+      }
+      /* the source of the drag stays visible but clearly lifted */
+      .dragging {
+        opacity: 0.4;
+      }
+      /* a grabbable header should say so, and keep saying so mid-drag */
+      .group-head,
+      .note-head {
+        cursor: grab;
+      }
+      body.is-dragging .group-head,
+      body.is-dragging .note-head {
+        cursor: grabbing;
+      }
+      /* text selection inside a draggable header just fights the drag */
+      .group-head,
+      .note-head {
+        -webkit-user-select: none;
+        user-select: none;
+      }
+
+      /* ============================== empty states ============================== */
+      .empty {
+        border: 1px dashed var(--border-2);
+        border-radius: var(--radius);
+        padding: 30px 22px;
+        text-align: center;
+        color: var(--dim);
+        background: transparent;
+      }
+      .empty p {
+        margin: 0 0 4px;
+        font-size: 14px;
+      }
+      .empty .hint {
+        font-size: 12.5px;
+        color: var(--faint);
+        margin-bottom: 14px;
+      }
+      kbd {
+        font: inherit;
+        font-size: 11px;
+        padding: 1px 5px;
+        border-radius: 5px;
+        background: var(--sunken);
+        border: 1px solid var(--border);
+        color: var(--dim);
+      }
+
+      /* ============================== dialogs ============================== */
+      dialog {
+        width: min(460px, calc(100vw - 32px));
+        padding: 0;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: var(--bg-elev);
+        color: var(--text);
+        box-shadow: var(--shadow-2);
+      }
+      dialog::backdrop {
+        background: rgba(10, 12, 16, 0.45);
+        backdrop-filter: blur(2px);
+      }
+      dialog.wide {
+        width: min(560px, calc(100vw - 32px));
+      }
+      .dlg-head {
+        padding: 16px 18px 0;
+      }
+      .dlg-head h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 640;
+      }
+      .dlg-head p {
+        margin: 5px 0 0;
+        font-size: 13px;
+        color: var(--dim);
+      }
+      .dlg-body {
+        padding: 14px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 13px;
+      }
+      .dlg-foot {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        padding: 12px 18px;
+        border-top: 1px solid var(--border);
+        background: var(--sunken);
+        border-radius: 0 0 13px 13px;
+      }
+      .dlg-foot .grow {
+        flex: 1;
+      }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .field label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--dim);
+      }
+      .field input[type="text"],
+      .field input[type="url"],
+      .field select {
+        padding: 9px 11px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        background: var(--bg);
+        width: 100%;
+      }
+      .field input:focus,
+      .field select:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-soft);
+      }
+      .field .err {
+        font-size: 12px;
+        color: var(--danger);
+        min-height: 0;
+      }
+      .field.invalid input {
+        border-color: var(--danger);
+      }
+      details.adv {
+        border-top: 1px solid var(--border);
+        padding-top: 11px;
+      }
+      details.adv summary {
+        cursor: pointer;
+        font-size: 12.5px;
+        color: var(--dim);
+        font-weight: 600;
+      }
+      details.adv > *:not(summary) {
+        margin-top: 11px;
+      }
+      .row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .check {
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+        cursor: pointer;
+        font-size: 13.5px;
+      }
+      .check input {
+        margin: 2px 0 0;
+        accent-color: var(--accent);
+        width: 15px;
+        height: 15px;
+      }
+      .check span small {
+        display: block;
+        color: var(--faint);
+        font-size: 12px;
+        font-weight: 400;
+      }
+      .seg {
+        display: inline-flex;
+        background: var(--sunken);
+        border-radius: var(--radius-sm);
+        padding: 2px;
+        gap: 2px;
+      }
+      .seg button {
+        border: 0;
+        background: transparent;
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        cursor: pointer;
+        color: var(--dim);
+        font-weight: 520;
+      }
+      .seg button[aria-pressed="true"] {
+        background: var(--bg-elev);
+        color: var(--text);
+        box-shadow: var(--shadow-1);
+      }
+      .sub {
+        font-size: 12.5px;
+        color: var(--faint);
+        margin: 0;
+      }
+      .meter {
+        height: 5px;
+        background: var(--sunken);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .meter i {
+        display: block;
+        height: 100%;
+        background: var(--accent);
+        border-radius: 99px;
+      }
+      .mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 11.5px;
+        background: var(--sunken);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 7px 9px;
+        word-break: break-all;
+        color: var(--dim);
+      }
+      .divider {
+        height: 1px;
+        background: var(--border);
+        margin: 2px 0;
+      }
+      .warn {
+        font-size: 12.5px;
+        background: var(--danger-soft);
+        color: var(--danger);
+        border-radius: var(--radius-sm);
+        padding: 9px 11px;
+      }
+      .help-list {
+        margin: 0;
+        padding-left: 18px;
+        font-size: 13px;
+        color: var(--dim);
+        line-height: 1.7;
+      }
+      .help-list code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 12px;
+        background: var(--sunken);
+        padding: 1px 5px;
+        border-radius: 5px;
+        color: var(--text);
+      }
+
+      /* ============================== toast ============================== */
+      #toasts {
+        position: fixed;
+        left: 50%;
+        bottom: 24px;
+        transform: translateX(-50%);
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+        pointer-events: none;
+      }
+      .toast {
+        pointer-events: auto;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: var(--text);
+        color: var(--bg);
+        padding: 10px 12px 10px 16px;
+        border-radius: 999px;
+        box-shadow: var(--shadow-2);
+        font-size: 13.5px;
+        max-width: min(92vw, 520px);
+        animation: rise 0.18s ease-out;
+      }
+      .toast button {
+        background: transparent;
+        border: 0;
+        color: inherit;
+        cursor: pointer;
+        font-weight: 680;
+        font-size: 13px;
+        padding: 3px 8px;
+        border-radius: 999px;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+      .toast button:hover {
+        background: rgba(128, 128, 128, 0.25);
+      }
+      .toast.err {
+        background: var(--danger);
+        color: #fff;
+      }
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.001s !important;
+          transition-duration: 0.001s !important;
+        }
+      }
+
+      /* ============================== late overrides ============================== */
+      /* several elements above are display:flex/grid, which beats the UA [hidden] rule */
+      [hidden] {
+        display: none !important;
+      }
+      .bm-main {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        min-width: 0;
+        flex: 1 1 auto;
+        padding-right: 20px;
+      }
+      .bm-empty {
+        grid-column: 1/-1;
+        margin: 0;
+        padding: 9px 8px;
+        font-size: 12.5px;
+        color: var(--faint);
+      }
+      /* a search match forces its group open without touching the saved collapsed flag */
+      .group.collapsed.force-open .bm-grid {
+        display: grid;
+      }
+      .group.collapsed.force-open .group-head {
+        border-bottom-color: var(--border);
+      }
+      #impDialog .dlg-head {
+        padding-bottom: 16px;
+      }
+      .toast .toast-x {
+        text-decoration: none;
+        font-size: 12px;
+        opacity: 0.65;
+        padding: 3px 6px;
+      }
+      .toast .toast-x:hover {
+        opacity: 1;
+      }
+      /* ============================== backdrop ==============================
+   #bg sits at a negative z-index so it paints above the root canvas colour but
+   below all in-flow content; body goes transparent in art mode so it does not
+   cover it. #bgScrim follows in the DOM, so at the same z-index it paints on
+   top of the photo. */
+      #bg,
+      #bgScrim {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        display: none;
+      }
+      :root[data-bg="art"] #bg,
+      :root[data-bg="art"] #bgScrim {
+        display: block;
+      }
+      :root[data-bg="art"] body {
+        background: transparent;
+      }
+      #bg {
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        opacity: 0;
+        transition: opacity 0.45s ease;
+      }
+      #bg.on {
+        opacity: 1;
+      }
+      #bgScrim {
+        background: linear-gradient(
+          180deg,
+          var(--scrim-top) 0,
+          var(--scrim-body) 260px,
+          var(--scrim-body) 100%
+        );
+      }
+      /* a quiet cluster in the corner: the attribution, and the button that
+         swaps today's picture for another one. The button sits rightmost so its
+         position never shifts when the credit is hidden. */
+      #bgBar {
+        position: fixed;
+        right: 10px;
+        bottom: 8px;
+        z-index: 30;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      #bgCredit,
+      #bgNext {
+        font-size: 10.5px;
+        letter-spacing: 0.02em;
+        color: var(--faint);
+        background: var(--glass);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        opacity: 0.5;
+        transition:
+          opacity 0.15s,
+          color 0.15s;
+      }
+      #bgCredit {
+        padding: 3px 9px;
+      }
+      #bgNext {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        padding: 0;
+        cursor: pointer;
+      }
+      #bgNext svg {
+        width: 13px;
+        height: 13px;
+        display: block;
+      }
+      #bgNext:hover,
+      #bgNext:focus-visible {
+        opacity: 1;
+        color: var(--text);
+      }
+      #bgNext.busy {
+        opacity: 1;
+        color: var(--accent);
+      }
+      #bgNext.busy svg {
+        animation: bgspin 0.8s linear infinite;
+      }
+      @keyframes bgspin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      #bgCredit:hover {
+        opacity: 1;
+        color: var(--text);
+      }
+
+      /* frosted surfaces, so the photo reads through the chrome without hurting text */
+      :root[data-bg="art"] {
+        --bg-elev: var(--glass);
+        --sunken: var(--glass-sunken);
+      }
+      :root[data-bg="art"] .group,
+      :root[data-bg="art"] .topbar,
+      :root[data-bg="art"] dialog,
+      :root[data-bg="art"] #search,
+      :root[data-bg="art"] .btn {
+        backdrop-filter: blur(16px) saturate(150%);
+        -webkit-backdrop-filter: blur(16px) saturate(150%);
+      }
+      :root[data-bg="art"] .group {
+        box-shadow:
+          0 1px 2px rgba(10, 12, 16, 0.06),
+          0 6px 22px rgba(10, 12, 16, 0.1);
+      }
+      /* notes stay fully opaque — coloured glass over a photo is where legibility dies */
+      :root[data-bg="art"] .note {
+        box-shadow: 0 2px 10px rgba(10, 12, 16, 0.16);
+      }
+      :root[data-bg="art"] .empty {
+        border-color: var(--border-2);
+        background: var(--glass);
+      }
+      :root[data-bg="art"] .bm:hover {
+        background: var(--glass-sunken);
+      }
+      /* the only text that sits on bare photo is the section headers and the ghost
+   button beside them — lift them off it. --scrim-top is already the right
+   colour to glow behind text in both themes. */
+      :root[data-bg="art"] .section-head h2 {
+        color: var(--dim);
+      }
+      :root[data-bg="art"] .section-head h2 {
+        text-shadow:
+          0 1px 3px var(--scrim-top),
+          0 0 10px var(--scrim-top);
+      }
+      :root[data-bg="art"] .count-pill {
+        background: var(--glass);
+        border: 1px solid var(--border);
+        color: var(--dim);
+      }
+      :root[data-bg="art"] .btn-ghost {
+        background: var(--glass);
+        border-color: var(--border);
+      }
+      :root[data-bg="art"] .btn-ghost:hover {
+        background: var(--bg-hover);
+      }
+      @supports not (backdrop-filter: blur(2px)) {
+        /* no blur available: lean on opacity instead so text never sits on bare photo */
+        :root[data-bg="art"] {
+          --bg-elev: var(--bg);
+        }
+        :root[data-bg="art"] #bgScrim {
+          --scrim-body: var(--scrim-top);
+        }
+      }
+
+      /* Compact rows drop the hostname line; the full title and URL stay
+         available in each row's tooltip. */
+      .bm-host {
+        display: none;
+      }
+      /* the notes column is narrow, so its empty state stays compact */
+      .pane-notes .empty {
+        padding: 22px 16px;
+      }
+
+      /* Under 900px the two columns stack, and two stacked columns cannot share
+         one viewport height — so drop the fixed shell and let the document
+         scroll normally. */
+      @media (max-width: 899px) {
+        body {
+          height: auto;
+          overflow: visible;
+          display: block;
+        }
+        .layout {
+          display: block;
+          padding-bottom: 60px;
+        }
+        .pane-body {
+          overflow: visible;
+        }
+        .pane-notes {
+          margin-top: 20px;
+        }
+        .notes-list .note {
+          max-height: none;
+        }
+      }
+
+      /* a pasted URL or a single very long word must wrap, not be clipped by overflow:hidden */
+      .note textarea {
+        overflow-wrap: break-word;
+        word-break: break-word;
+      }
+      /* :root lifts this above the dark-theme .note .icon-btn colour, so a pinned
+   note's pin still reads as active in dark mode */
+      /* the <meta> only covers system mode; a forced theme must tell the engine
+         too, or scrollbars and native form controls stay in the OS appearance */
+      :root[data-theme="light"] {
+        color-scheme: light;
+      }
+      :root[data-theme="dark"] {
+        color-scheme: dark;
+      }
+      :root .note[data-pinned="1"] .pin-btn {
+        color: var(--text);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="bg" aria-hidden="true"></div>
+    <div id="bgScrim" aria-hidden="true"></div>
+    <div id="bgBar" hidden>
+      <a
+        id="bgCredit"
+        href="https://picsum.photos/"
+        target="_blank"
+        rel="noopener noreferrer"
+        hidden
+        >Photo via Lorem Picsum</a
+      >
+      <button
+        type="button"
+        id="bgNext"
+        title="New wallpaper"
+        aria-label="Load a new background wallpaper"
+      ></button>
+    </div>
+
+    <header class="topbar">
+      <div class="clock" id="clock" hidden>
+        <span class="clock-time" id="clockTime">--:--</span>
+        <span class="clock-sub" id="clockSub"></span>
+      </div>
+
+      <div class="search-wrap">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
+          <circle cx="11" cy="11" r="7" />
+          <path d="M20 20l-3.5-3.5" />
+        </svg>
+        <input
+          id="search"
+          type="text"
+          placeholder="Search bookmarks and notes…  (press /)"
+          autocomplete="off"
+          spellcheck="false"
+          aria-label="Search bookmarks and notes"
+        />
+        <button
+          class="icon-btn search-clear"
+          id="searchClear"
+          hidden
+          aria-label="Clear search"
+          title="Clear search"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          >
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="spacer"></div>
+
+      <div class="bar-actions">
+        <button
+          class="icon-btn"
+          id="themeBtn"
+          aria-label="Change theme"
+          title="Theme"
+        ></button>
+        <button
+          class="icon-btn"
+          id="settingsBtn"
+          aria-label="Settings"
+          title="Settings &amp; backup"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          >
+            <circle cx="12" cy="12" r="3" />
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6 1.65 1.65 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.14.6.66 1.03 1.28 1.06H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+            />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="pane pane-bookmarks" aria-labelledby="bmHead">
+        <div class="section-head">
+          <h2 id="bmHead">Bookmarks</h2>
+          <span class="count-pill" id="bmCount">0</span>
+          <div class="spacer"></div>
+          <button
+            class="btn btn-ghost"
+            id="addBookmarkBtn"
+            title="Add bookmark (b)"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="14"
+              height="14"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            Bookmark
+          </button>
+          <button class="btn btn-ghost" id="addGroupBtn" title="Add group (g)">
+            <svg
+              viewBox="0 0 24 24"
+              width="14"
+              height="14"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            Group
+          </button>
+        </div>
+        <div class="pane-body">
+          <div id="groups"></div>
+        </div>
+      </section>
+
+      <section class="pane pane-notes" aria-labelledby="noteHead">
+        <div class="section-head">
+          <h2 id="noteHead">Things to remember</h2>
+          <span class="count-pill" id="noteCount">0</span>
+          <div class="spacer"></div>
+          <button class="btn btn-ghost" id="addNoteBtn" title="Add note (n)">
+            <svg
+              viewBox="0 0 24 24"
+              width="14"
+              height="14"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            Note
+          </button>
+        </div>
+        <div class="pane-body">
+          <div id="notes"></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ============================ bookmark dialog ============================ -->
+    <dialog id="bmDialog" aria-labelledby="bmDlgTitle">
+      <form id="bmForm" method="dialog">
+        <div class="dlg-head"><h3 id="bmDlgTitle">Add bookmark</h3></div>
+        <div class="dlg-body">
+          <div class="field" id="fUrl">
+            <label for="bmUrl">Link</label>
+            <input
+              id="bmUrl"
+              type="text"
+              placeholder="github.com"
+              autocomplete="off"
+              spellcheck="false"
+              required
+            />
+            <span class="err" id="bmUrlErr"></span>
+          </div>
+          <div class="field">
+            <label for="bmTitle">Title</label>
+            <input
+              id="bmTitle"
+              type="text"
+              placeholder="Filled from the link if left blank"
+              autocomplete="off"
+            />
+          </div>
+          <div class="field">
+            <label for="bmGroup">Group</label>
+            <select id="bmGroup"></select>
+          </div>
+          <div class="field" id="fNewGroup" hidden>
+            <label for="bmNewGroup">New group name</label>
+            <input
+              id="bmNewGroup"
+              type="text"
+              placeholder="e.g. Work"
+              autocomplete="off"
+            />
+          </div>
+          <details class="adv">
+            <summary>Advanced</summary>
+            <div class="field">
+              <label for="bmIcon"
+                >Custom icon URL
+                <span style="font-weight: 400; color: var(--faint)"
+                  >(optional)</span
+                ></label
+              >
+              <input
+                id="bmIcon"
+                type="text"
+                placeholder="https://example.com/icon.png"
+                autocomplete="off"
+                spellcheck="false"
+              />
+              <span class="err" id="bmIconErr"></span>
+            </div>
+          </details>
+        </div>
+        <div class="dlg-foot">
+          <button type="button" class="btn btn-danger" id="bmDelete" hidden>
+            Delete
+          </button>
+          <span class="grow"></span>
+          <button type="button" class="btn" id="bmCancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="bmSave">
+            Save
+          </button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- ============================ group dialog ============================ -->
+    <dialog id="grpDialog" aria-labelledby="grpDlgTitle">
+      <form id="grpForm" method="dialog">
+        <div class="dlg-head"><h3 id="grpDlgTitle">Add group</h3></div>
+        <div class="dlg-body">
+          <div class="field">
+            <label for="grpName">Group name</label>
+            <input
+              id="grpName"
+              type="text"
+              placeholder="e.g. Work"
+              autocomplete="off"
+              required
+            />
+          </div>
+        </div>
+        <div class="dlg-foot">
+          <button type="button" class="btn btn-danger" id="grpDelete" hidden>
+            Delete group
+          </button>
+          <span class="grow"></span>
+          <button type="button" class="btn" id="grpCancel">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- ============================ settings dialog ============================ -->
+    <dialog id="setDialog" class="wide" aria-labelledby="setDlgTitle">
+      <div class="dlg-head">
+        <h3 id="setDlgTitle">Settings &amp; backup</h3>
+        <p>
+          Everything you add is stored only in this browser, never in the HTML
+          file.
+        </p>
+      </div>
+      <div class="dlg-body">
+        <div id="storageWarn" class="warn" hidden></div>
+
+        <div class="field">
+          <label>Theme</label>
+          <div class="seg" id="themeSeg">
+            <button type="button" data-theme-val="system">System</button>
+            <button type="button" data-theme-val="light">Light</button>
+            <button type="button" data-theme-val="dark">Dark</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field">
+          <label>Backdrop</label>
+          <div class="seg" id="bgSeg">
+            <button type="button" data-bg-val="photo">Daily photo</button>
+            <button type="button" data-bg-val="gradient">Colour wash</button>
+            <button type="button" data-bg-val="plain">Plain</button>
+          </div>
+          <p class="sub" id="bgNote">&nbsp;</p>
+          <div class="row">
+            <button type="button" class="btn" id="bgShuffle">
+              New wallpaper
+            </button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <label class="check"
+          ><input type="checkbox" id="optFavicons" /><span
+            >Load favicons from the internet<small
+              >Uses Google&rsquo;s favicon service, so the domains you bookmark
+              are sent there. Turn off for coloured letter tiles only &mdash;
+              fully offline and private.</small
+            ></span
+          ></label
+        >
+        <label class="check"
+          ><input type="checkbox" id="optNewTab" /><span
+            >Open bookmarks in a new tab<small
+              >Off keeps the homepage behaviour of navigating in place.</small
+            ></span
+          ></label
+        >
+        <label class="check"
+          ><input type="checkbox" id="optClock" /><span
+            >Show the clock and greeting</span
+          ></label
+        >
+
+        <div class="divider"></div>
+
+        <div class="field">
+          <label>Backup</label>
+          <p class="sub" id="storageUsage">&nbsp;</p>
+          <div class="meter"><i id="storageBar" style="width: 0%"></i></div>
+          <div class="row" style="flex-wrap: wrap; margin-top: 8px">
+            <button type="button" class="btn" id="exportBtn">
+              Download backup
+            </button>
+            <button type="button" class="btn" id="copyBtn">Copy JSON</button>
+            <button type="button" class="btn" id="importBtn">
+              Restore from file&hellip;
+            </button>
+            <input
+              type="file"
+              id="importFile"
+              accept="application/json,.json"
+              hidden
+            />
+          </div>
+          <p class="sub">
+            Clearing your browser&rsquo;s cookies and site data erases this
+            page&rsquo;s storage. Download a backup now and then if the notes
+            matter.
+          </p>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field">
+          <label>Bring in bookmarks you already have</label>
+          <p class="sub">
+            Edge, Chrome and Firefox can each export their bookmarks to an HTML
+            file. Folders become groups, a nested folder becomes &ldquo;Parent /
+            Child&rdquo;, and any icons stored inside the file are used directly
+            &mdash; so those bookmarks need no favicon service and work offline.
+          </p>
+          <div class="row" style="flex-wrap: wrap; margin-top: 2px">
+            <button type="button" class="btn" id="importHtmlBtn">
+              Import bookmarks HTML&hellip;
+            </button>
+            <input
+              type="file"
+              id="importHtmlFile"
+              accept="text/html,.html,.htm"
+              hidden
+            />
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <details class="adv">
+          <summary>How to set this page as your home page</summary>
+          <p class="sub" style="margin-top: 10px">
+            This page&rsquo;s address &mdash; paste it into your browser&rsquo;s
+            home page setting:
+          </p>
+          <div class="mono" id="selfUrl"></div>
+          <div class="row" style="margin-top: 8px">
+            <button type="button" class="btn" id="copyUrlBtn">
+              Copy address
+            </button>
+          </div>
+          <ul class="help-list" style="margin-top: 12px">
+            <li>
+              <b>Chrome / Edge</b> &mdash; Settings &rarr; Appearance &rarr;
+              turn on <i>Show home button</i> &rarr; choose the custom address
+              and paste it.
+            </li>
+            <li>
+              <b>Firefox</b> &mdash; Settings &rarr; Home &rarr;
+              <i>Homepage and new windows</i> &rarr; Custom URLs &rarr; paste
+              it.
+            </li>
+            <li>
+              <b>Safari</b> &mdash; Settings &rarr; General &rarr; Homepage
+              &rarr; paste it.
+            </li>
+          </ul>
+          <p class="sub" style="margin-top: 10px">
+            The <i>new tab</i> page cannot be changed to a local file without a
+            browser extension &mdash; the home button can.
+          </p>
+        </details>
+
+        <div class="divider"></div>
+
+        <div class="field">
+          <label>Danger zone</label>
+          <div class="row">
+            <button type="button" class="btn btn-danger" id="clearBtn">
+              Erase all bookmarks and notes
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="dlg-foot">
+        <span class="grow"></span>
+        <button type="button" class="btn btn-primary" id="setClose">
+          Done
+        </button>
+      </div>
+    </dialog>
+
+    <!-- ============================ import dialog ============================ -->
+    <dialog id="impDialog" aria-labelledby="impDlgTitle">
+      <div class="dlg-head">
+        <h3 id="impDlgTitle">Restore backup</h3>
+        <p id="impSummary"></p>
+      </div>
+      <div class="dlg-foot">
+        <button type="button" class="btn" id="impCancel">Cancel</button>
+        <span class="grow"></span>
+        <button type="button" class="btn" id="impMerge">Merge</button>
+        <button type="button" class="btn btn-primary" id="impReplace">
+          Replace everything
+        </button>
+      </div>
+    </dialog>
+
+    <div id="toasts" role="status" aria-live="polite"></div>
+    <script>
+      "use strict";
+      (function () {
+        /* ==========================================================================
+   1. helpers
+   ========================================================================== */
+        const $ = (s, r = document) => r.querySelector(s);
+        const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+
+        /* Only ever called with the hand-written icon strings below — never user data. */
+        const ICONS = {
+          grip: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="5" r="1.5"/><circle cx="15" cy="5" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="15" cy="19" r="1.5"/></svg>',
+          chevron:
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>',
+          pencil:
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l11-11-4-4L4 16v4z"/><path d="M14.5 5.5l4 4"/></svg>',
+          trash:
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M9.5 7V5h5v2"/><path d="M6.5 7l.9 12.1a1 1 0 0 0 1 .9h7.2a1 1 0 0 0 1-.9L17.5 7"/></svg>',
+          plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+          pin: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8.6 3h6.8l-.8 5.4 2.7 2.5a1 1 0 0 1-.7 1.7h-4v6.6a.85.85 0 0 1-1.7 0v-6.6h-4a1 1 0 0 1-.7-1.7l2.7-2.5L8.6 3z"/></svg>',
+          palette:
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8.6"/><circle cx="9.2" cy="9.6" r="1.15" fill="currentColor" stroke="none"/><circle cx="14.6" cy="9.9" r="1.15" fill="currentColor" stroke="none"/><circle cx="10" cy="15" r="1.15" fill="currentColor" stroke="none"/></svg>',
+          sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>',
+          moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>',
+          refresh:
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3.6 12a8.4 8.4 0 0 1 14.3-6"/><path d="M18.2 3.2v3.4h-3.4"/><path d="M20.4 12a8.4 8.4 0 0 1-14.3 6"/><path d="M5.8 20.8v-3.4h3.4"/></svg>',
+          monitor:
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M9 20h6M12 16v4"/></svg>',
+        };
+        function icon(name) {
+          const s = document.createElement("span");
+          s.style.display = "flex";
+          s.innerHTML = ICONS[name];
+          return s;
+        }
+
+        function el(tag, props, kids) {
+          const n = document.createElement(tag);
+          if (props)
+            for (const k in props) {
+              const v = props[k];
+              if (v === null || v === undefined || v === false) continue;
+              if (k === "class") n.className = v;
+              else if (k === "text") n.textContent = v;
+              else if (k === "dataset") Object.assign(n.dataset, v);
+              else if (k === "style") {
+                /* Object.assign cannot set CSS custom properties — they need setProperty */
+                for (const sk in v) {
+                  if (sk.charAt(0) === "-" && sk.charAt(1) === "-")
+                    n.style.setProperty(sk, v[sk]);
+                  else n.style[sk] = v[sk];
+                }
+              } else if (k.slice(0, 2) === "on" && typeof v === "function")
+                n.addEventListener(k.slice(2), v);
+              else n.setAttribute(k, v === true ? "" : String(v));
+            }
+          if (kids != null)
+            for (const kid of [].concat(kids)) {
+              if (kid === null || kid === undefined || kid === false) continue;
+              n.append(
+                kid.nodeType ? kid : document.createTextNode(String(kid)),
+              );
+            }
+          return n;
+        }
+
+        const str = (v) => (typeof v === "string" ? v : "");
+        const clamp = (n, lo, hi) => Math.min(hi, Math.max(lo, n));
+        const clone = (o) =>
+          typeof structuredClone === "function"
+            ? structuredClone(o)
+            : JSON.parse(JSON.stringify(o));
+        let uidSeq = 0;
+        const uid = () =>
+          "i" +
+          Date.now().toString(36) +
+          (uidSeq++).toString(36) +
+          Math.random().toString(36).slice(2, 6);
+
+        function hashHue(s) {
+          let h = 0;
+          for (let i = 0; i < s.length; i++)
+            h = (h * 31 + s.charCodeAt(i)) % 360;
+          return h;
+        }
+
+        const URL_SCHEMES = [
+          "http:",
+          "https:",
+          "mailto:",
+          "file:",
+          "ftp:",
+          "ftps:",
+        ];
+        function normalizeUrl(raw) {
+          let s = str(raw).trim();
+          if (!s) return "";
+          if (!/^[a-z][a-z0-9+.\-]*:/i.test(s)) s = "https://" + s;
+          let u;
+          try {
+            u = new URL(s);
+          } catch (e) {
+            return "";
+          }
+          if (URL_SCHEMES.indexOf(u.protocol.toLowerCase()) === -1) return "";
+          if (/^(https?|ftps?):$/i.test(u.protocol) && !u.hostname) return "";
+          return u.href;
+        }
+        function normalizeIcon(raw) {
+          const s = str(raw).trim();
+          if (!s) return "";
+          if (/^https?:\/\//i.test(s)) {
+            try {
+              new URL(s);
+              return s;
+            } catch (e) {
+              return "";
+            }
+          }
+          if (
+            /^data:image\/(png|jpeg|gif|webp|svg\+xml);base64,[a-z0-9+/=]+$/i.test(
+              s,
+            )
+          )
+            return s;
+          return "";
+        }
+        function hostOf(url) {
+          try {
+            return new URL(url).hostname.replace(/^www\./i, "");
+          } catch (e) {
+            return "";
+          }
+        }
+        function labelOf(url) {
+          const h = hostOf(url);
+          if (h)
+            return h
+              .split(".")[0]
+              .replace(/[-_]/g, " ")
+              .replace(/^./, (c) => c.toUpperCase());
+          try {
+            const u = new URL(url);
+            return u.protocol === "mailto:" ? u.pathname : url;
+          } catch (e) {
+            return url;
+          }
+        }
+        function faviconSrc(bm) {
+          if (bm.icon) return bm.icon;
+          if (!state.settings.favicons) return "";
+          const h = hostOf(bm.url);
+          return h
+            ? "https://www.google.com/s2/favicons?sz=64&domain=" +
+                encodeURIComponent(h)
+            : "";
+        }
+
+        function relTime(ts) {
+          if (!ts) return "";
+          const d = Date.now() - ts,
+            m = Math.round(d / 60000);
+          if (m < 1) return "just now";
+          if (m < 60) return m + "m ago";
+          const h = Math.round(m / 60);
+          if (h < 24) return h + "h ago";
+          const days = Math.round(h / 24);
+          if (days === 1) return "yesterday";
+          if (days < 7) return days + "d ago";
+          return new Date(ts).toLocaleDateString(undefined, {
+            month: "short",
+            day: "numeric",
+          });
+        }
+
+        /* ==========================================================================
+   2. storage
+   ========================================================================== */
+        const KEY = "homepage.v1";
+        const VERSION = 1;
+        const QUOTA_GUESS = 5 * 1024 * 1024;
+
+        const store = (function () {
+          let ok = false;
+          try {
+            const probe = "__hp_probe__";
+            window.localStorage.setItem(probe, "1");
+            window.localStorage.removeItem(probe);
+            ok = true;
+          } catch (e) {
+            ok = false;
+          }
+          return {
+            ok: ok,
+            read: function () {
+              if (!ok) return null;
+              try {
+                return window.localStorage.getItem(KEY);
+              } catch (e) {
+                return null;
+              }
+            },
+            write: function (s) {
+              if (!ok) return "unavailable";
+              try {
+                window.localStorage.setItem(KEY, s);
+                return "ok";
+              } catch (e) {
+                return e && (e.name === "QuotaExceededError" || e.code === 22)
+                  ? "quota"
+                  : "error";
+              }
+            },
+            remove: function () {
+              if (!ok) return;
+              try {
+                window.localStorage.removeItem(KEY);
+              } catch (e) {}
+            },
+          };
+        })();
+
+        function defaultState() {
+          return {
+            version: VERSION,
+            groups: [],
+            notes: [],
+            settings: {
+              theme: "system",
+              favicons: true,
+              newTab: false,
+              clock: true,
+              background: "photo",
+              bgNonce: "",
+            },
+          };
+        }
+
+        /* Rebuilds a trusted state object out of anything at all — used for both the
+   value in localStorage and for imported files, so a corrupt or hand-edited
+   payload can never break the page. */
+        function coerce(raw) {
+          const out = defaultState();
+          if (!raw || typeof raw !== "object") return out;
+          const seen = Object.create(null);
+          const takeId = (v) => {
+            let id = str(v).slice(0, 40);
+            if (!id || seen[id]) id = uid();
+            seen[id] = 1;
+            return id;
+          };
+
+          const toBookmark = (b) => {
+            if (!b || typeof b !== "object") return null;
+            const url = normalizeUrl(b.url);
+            if (!url) return null;
+            return {
+              id: takeId(b.id),
+              url: url,
+              title: (str(b.title).trim() || labelOf(url)).slice(0, 160),
+              icon: normalizeIcon(b.icon),
+            };
+          };
+
+          const groups = Array.isArray(raw.groups) ? raw.groups : [];
+          out.groups = groups
+            .filter((g) => g && typeof g === "object")
+            .map((g) => ({
+              id: takeId(g.id),
+              name: (str(g.name).trim() || "Bookmarks").slice(0, 80),
+              collapsed: !!g.collapsed,
+              bookmarks: (Array.isArray(g.bookmarks) ? g.bookmarks : [])
+                .map(toBookmark)
+                .filter(Boolean),
+            }));
+
+          /* tolerate a flat bookmark array (older backups, other tools) */
+          if (Array.isArray(raw.bookmarks) && raw.bookmarks.length) {
+            const loose = raw.bookmarks.map(toBookmark).filter(Boolean);
+            if (loose.length)
+              out.groups.push({
+                id: uid(),
+                name: "Imported",
+                collapsed: false,
+                bookmarks: loose,
+              });
+          }
+
+          const notes = Array.isArray(raw.notes) ? raw.notes : [];
+          out.notes = notes
+            .filter((n) => n && typeof n === "object")
+            .map((n) => ({
+              id: takeId(n.id),
+              text: str(n.text).slice(0, 20000),
+              color: clamp(parseInt(n.color, 10) || 1, 1, 6),
+              pinned: !!n.pinned,
+              createdAt: Number(n.createdAt) || Date.now(),
+              updatedAt:
+                Number(n.updatedAt) || Number(n.createdAt) || Date.now(),
+            }));
+
+          const s =
+            raw.settings && typeof raw.settings === "object"
+              ? raw.settings
+              : {};
+          out.settings.theme =
+            ["system", "light", "dark"].indexOf(s.theme) >= 0
+              ? s.theme
+              : "system";
+          out.settings.favicons =
+            s.favicons === undefined ? true : !!s.favicons;
+          out.settings.newTab = s.newTab === undefined ? false : !!s.newTab;
+          out.settings.clock = s.clock === undefined ? true : !!s.clock;
+          out.settings.background =
+            ["photo", "gradient", "plain"].indexOf(s.background) >= 0
+              ? s.background
+              : "photo";
+          out.settings.bgNonce = str(s.bgNonce)
+            .replace(/[^a-z0-9]/gi, "")
+            .slice(0, 12);
+          return out;
+        }
+
+        function load() {
+          const raw = store.read();
+          if (!raw) return defaultState();
+          try {
+            return coerce(JSON.parse(raw));
+          } catch (e) {
+            console.warn("Stored data was unreadable, starting fresh.", e);
+            return defaultState();
+          }
+        }
+
+        let state = load();
+        let saveTimer = null;
+        let lastWritten = "";
+
+        function serialize() {
+          return JSON.stringify({
+            version: VERSION,
+            groups: state.groups,
+            notes: state.notes,
+            settings: state.settings,
+          });
+        }
+
+        function flush() {
+          if (saveTimer) {
+            clearTimeout(saveTimer);
+            saveTimer = null;
+          }
+          const payload = serialize();
+          if (payload === lastWritten) return;
+          const res = store.write(payload);
+          if (res === "ok") {
+            lastWritten = payload;
+            return;
+          }
+          if (res === "quota")
+            toast(
+              "Browser storage is full — the last change was not saved. Download a backup and delete something.",
+              { kind: "err", ms: 12000 },
+            );
+          else if (res === "unavailable")
+            toast(
+              "This browser is blocking storage, so nothing can be saved.",
+              { kind: "err", ms: 9000 },
+            );
+          else
+            toast("Could not save to browser storage.", {
+              kind: "err",
+              ms: 9000,
+            });
+        }
+        function save() {
+          if (saveTimer) clearTimeout(saveTimer);
+          saveTimer = setTimeout(flush, 250);
+        }
+
+        /* ==========================================================================
+   3. mutation + undo
+   ========================================================================== */
+        function normalize() {
+          /* keep the notes array as [ ...pinned, ...unpinned ] so array order always
+     matches what is on screen, which keeps drag-and-drop indexes honest */
+          const pinned = [],
+            rest = [];
+          for (const n of state.notes) (n.pinned ? pinned : rest).push(n);
+          state.notes = pinned.concat(rest);
+        }
+
+        /* An undo offer is a whole-state snapshot, so it is only safe to accept while
+   nothing else has changed since. Any later mutation retires the offer rather
+   than leaving a button that would quietly roll back newer work too. */
+        let retireUndo = null;
+
+        function mutate(fn, opts) {
+          opts = opts || {};
+          if (retireUndo) {
+            retireUndo();
+            retireUndo = null;
+          }
+          const before = opts.undo ? clone(state) : null;
+          fn();
+          normalize();
+          save();
+          if (opts.silent) {
+            updateCounts();
+          } else {
+            render();
+          }
+          if (opts.undo) {
+            retireUndo = toast(opts.undo, {
+              action: "Undo",
+              ms: 8000,
+              fn: function () {
+                retireUndo = null;
+                state = before;
+                flush();
+                render();
+                toast("Restored");
+              },
+            });
+          }
+        }
+
+        /* ==========================================================================
+   4. toasts
+   ========================================================================== */
+        const toastHost = $("#toasts");
+
+        /* showModal() promotes a <dialog> and its ::backdrop into the browser's top
+   layer, which paints above everything in the normal layer. A toast left on
+   <body> would therefore sit *behind* the backdrop and be unclickable — which
+   silently swallowed the Undo offered after "Erase everything". Keeping the
+   toast host parented to the topmost open modal puts it back in the top layer
+   alongside it; position:fixed still resolves against the viewport there. */
+        const modalStack = [];
+        function openModal(d) {
+          const i = modalStack.indexOf(d);
+          if (i > -1) modalStack.splice(i, 1);
+          modalStack.push(d);
+          d.showModal();
+          placeToasts();
+        }
+        function placeToasts() {
+          let host = document.body;
+          for (let i = modalStack.length - 1; i >= 0; i--) {
+            if (modalStack[i].open) {
+              host = modalStack[i];
+              break;
+            }
+          }
+          if (toastHost.parentNode !== host) host.append(toastHost);
+        }
+
+        function toast(msg, opts) {
+          opts = opts || {};
+          placeToasts();
+          const t = el(
+            "div",
+            { class: "toast" + (opts.kind === "err" ? " err" : "") },
+            [el("span", { text: msg })],
+          );
+          let timer = null;
+          const kill = () => {
+            if (timer) clearTimeout(timer);
+            if (t.parentNode) t.remove();
+          };
+          if (opts.action && opts.fn) {
+            t.append(
+              el("button", {
+                type: "button",
+                text: opts.action,
+                onclick: function () {
+                  kill();
+                  opts.fn();
+                },
+              }),
+            );
+          }
+          t.append(
+            el("button", {
+              type: "button",
+              class: "toast-x",
+              "aria-label": "Dismiss",
+              text: "✕",
+              onclick: kill,
+            }),
+          );
+          toastHost.append(t);
+          timer = setTimeout(kill, opts.ms || 4000);
+          while (toastHost.children.length > 3)
+            toastHost.firstElementChild.remove();
+          return kill;
+        }
+
+        /* ==========================================================================
+   5. lookups
+   ========================================================================== */
+        function findGroup(id) {
+          return state.groups.find((g) => g.id === id) || null;
+        }
+        function findBookmark(id) {
+          for (const g of state.groups) {
+            const i = g.bookmarks.findIndex((b) => b.id === id);
+            if (i > -1) return { group: g, bm: g.bookmarks[i], index: i };
+          }
+          return null;
+        }
+        function findNote(id) {
+          const i = state.notes.findIndex((n) => n.id === id);
+          return i > -1 ? { note: state.notes[i], index: i } : null;
+        }
+        function totalBookmarks() {
+          return state.groups.reduce((n, g) => n + g.bookmarks.length, 0);
+        }
+
+        /* ==========================================================================
+   6. drag and drop
+   ========================================================================== */
+        let drag = null; /* {kind:'bm'|'group'|'note', id} */
+        let dropMark = null; /* {node, where} */
+
+        const MARK_CLASSES = [
+          "dm-x-before",
+          "dm-x-after",
+          "dm-y-before",
+          "dm-y-after",
+          "drop-into",
+        ];
+        function clearMark() {
+          if (!dropMark) return;
+          MARK_CLASSES.forEach((c) => dropMark.node.classList.remove(c));
+          dropMark = null;
+        }
+        function mark(node, cls) {
+          if (dropMark && dropMark.node === node && dropMark.cls === cls)
+            return;
+          clearMark();
+          node.classList.add(cls);
+          dropMark = { node: node, cls: cls };
+        }
+        function markEdge(node, axis, where) {
+          mark(node, "dm-" + axis + "-" + where);
+        }
+
+        /* A drop only happens if preventDefault runs, and the pointer only shows
+           a move affordance if dropEffect is set. Without the second the drag
+           reads as "not allowed" even over a target that accepts it. */
+        function allowDrop(e) {
+          e.preventDefault();
+          try {
+            if (e.dataTransfer) e.dataTransfer.dropEffect = "move";
+          } catch (err) {}
+        }
+
+        /* Which way a list actually runs, measured rather than assumed: bookmark
+           rows stack vertically inside a narrow group card but sit side by side
+           in a wide grid, and the notes rail is horizontal. Getting this wrong
+           is what made the insert marker appear on the wrong edge. */
+        function axisOf(kids) {
+          for (let i = 1; i < kids.length; i++) {
+            const a = kids[i - 1].getBoundingClientRect(),
+              b = kids[i].getBoundingClientRect();
+            const dx = Math.abs(b.left - a.left),
+              dy = Math.abs(b.top - a.top);
+            if (dx > 1 || dy > 1) return dy > dx ? "y" : "x";
+          }
+          return "y";
+        }
+        function siblingAxis(node, selector) {
+          const parent = node.parentElement;
+          if (!parent) return "y";
+          return axisOf(
+            Array.from(parent.querySelectorAll(selector)).filter(
+              (k) => !k.hidden,
+            ),
+          );
+        }
+        function sideOf(e, node, axis) {
+          const r = node.getBoundingClientRect();
+          return axis === "x"
+            ? e.clientX < r.left + r.width / 2
+              ? "before"
+              : "after"
+            : e.clientY < r.top + r.height / 2
+              ? "before"
+              : "after";
+        }
+        /* dragleave also fires when the pointer crosses into a child, which made
+           the marker flicker; only a real exit should clear it. */
+        function reallyLeft(node, e) {
+          return !e.relatedTarget || !node.contains(e.relatedTarget);
+        }
+        function moveWithin(arr, from, to) {
+          if (from < 0 || from >= arr.length) return;
+          const item = arr.splice(from, 1)[0];
+          if (to > from) to--;
+          arr.splice(clamp(to, 0, arr.length), 0, item);
+        }
+        function startDrag(e, kind, id, ghost) {
+          drag = { kind: kind, id: id };
+          try {
+            e.dataTransfer.effectAllowed = "move";
+            e.dataTransfer.setData("text/plain", kind + ":" + id);
+            if (ghost && e.dataTransfer.setDragImage)
+              e.dataTransfer.setDragImage(ghost, 16, 16);
+          } catch (err) {}
+          ghost && ghost.classList.add("dragging");
+          document.body.classList.add("is-dragging");
+        }
+        /* Panes scroll internally now, so a drag has to be able to reach a group
+           that is off-screen. Nudge whichever pane the pointer is over. */
+        const EDGE = 70,
+          EDGE_STEP = 20;
+        let dragPoint = null,
+          scrollRAF = 0;
+        function stopAutoScroll() {
+          if (scrollRAF && typeof cancelAnimationFrame === "function")
+            cancelAnimationFrame(scrollRAF);
+          scrollRAF = 0;
+          dragPoint = null;
+        }
+        function autoScrollStep() {
+          scrollRAF = 0;
+          if (!drag || !dragPoint) return;
+          const under = document.elementFromPoint(dragPoint.x, dragPoint.y);
+          const pane =
+            under && under.closest ? under.closest(".pane-body") : null;
+          if (pane) {
+            const r = pane.getBoundingClientRect();
+            if (pane.scrollHeight > pane.clientHeight) {
+              if (dragPoint.y < r.top + EDGE) pane.scrollTop -= EDGE_STEP;
+              else if (dragPoint.y > r.bottom - EDGE)
+                pane.scrollTop += EDGE_STEP;
+            }
+            if (pane.scrollWidth > pane.clientWidth) {
+              if (dragPoint.x < r.left + EDGE) pane.scrollLeft -= EDGE_STEP;
+              else if (dragPoint.x > r.right - EDGE)
+                pane.scrollLeft += EDGE_STEP;
+            }
+          }
+          if (typeof requestAnimationFrame === "function")
+            scrollRAF = requestAnimationFrame(autoScrollStep);
+        }
+        document.addEventListener(
+          "dragover",
+          function (e) {
+            if (!drag) return;
+            dragPoint = { x: e.clientX, y: e.clientY };
+            if (!scrollRAF && typeof requestAnimationFrame === "function")
+              scrollRAF = requestAnimationFrame(autoScrollStep);
+          },
+          true,
+        );
+
+        function endDrag() {
+          drag = null;
+          clearMark();
+          stopAutoScroll();
+          document.body.classList.remove("is-dragging");
+          $$(".dragging").forEach((n) => n.classList.remove("dragging"));
+        }
+        document.addEventListener("dragend", endDrag);
+        document.addEventListener("drop", function (e) {
+          if (drag) {
+            e.preventDefault();
+            endDrag();
+          }
+        });
+
+        /* ==========================================================================
+   7. render — bookmarks
+   ========================================================================== */
+        const groupsHost = $("#groups");
+        const notesHost = $("#notes");
+
+        function bookmarkEl(bm, group) {
+          const row = el("div", {
+            class: "bm",
+            draggable: "true",
+            dataset: {
+              id: bm.id,
+              search: (bm.title + " " + bm.url).toLowerCase(),
+            },
+            ondragstart: function (e) {
+              e.stopPropagation();
+              startDrag(e, "bm", bm.id, row);
+            },
+            ondragenter: function (e) {
+              if (drag && drag.kind === "bm" && drag.id !== bm.id) allowDrop(e);
+            },
+            ondragover: function (e) {
+              if (!drag || drag.kind !== "bm" || drag.id === bm.id) return;
+              allowDrop(e);
+              e.stopPropagation();
+              const axis = siblingAxis(row, ".bm");
+              markEdge(row, axis, sideOf(e, row, axis));
+            },
+            ondragleave: function (e) {
+              if (dropMark && dropMark.node === row && reallyLeft(row, e))
+                clearMark();
+            },
+            ondrop: function (e) {
+              if (!drag || drag.kind !== "bm" || drag.id === bm.id) return;
+              allowDrop(e);
+              e.stopPropagation();
+              const axis = siblingAxis(row, ".bm");
+              const where = sideOf(e, row, axis),
+                movedId = drag.id;
+              endDrag();
+              mutate(function () {
+                const src = findBookmark(movedId);
+                if (!src) return;
+                src.group.bookmarks.splice(src.index, 1);
+                const dst = findBookmark(bm.id);
+                if (!dst) {
+                  src.group.bookmarks.splice(src.index, 0, src.bm);
+                  return;
+                }
+                dst.group.bookmarks.splice(
+                  dst.index + (where === "after" ? 1 : 0),
+                  0,
+                  src.bm,
+                );
+              });
+            },
+            onkeydown: function (e) {
+              if (!e.altKey || e.key.indexOf("Arrow") !== 0) return;
+              e.preventDefault();
+              const gi = state.groups.indexOf(group),
+                bi = group.bookmarks.indexOf(bm);
+              mutate(function () {
+                if (e.key === "ArrowLeft")
+                  moveWithin(group.bookmarks, bi, bi - 1);
+                if (e.key === "ArrowRight")
+                  moveWithin(group.bookmarks, bi, bi + 2);
+                /* expand the destination, or the bookmark vanishes with focus */
+                if (e.key === "ArrowUp" && gi > 0) {
+                  group.bookmarks.splice(bi, 1);
+                  state.groups[gi - 1].bookmarks.push(bm);
+                  state.groups[gi - 1].collapsed = false;
+                }
+                if (e.key === "ArrowDown" && gi < state.groups.length - 1) {
+                  group.bookmarks.splice(bi, 1);
+                  state.groups[gi + 1].bookmarks.unshift(bm);
+                  state.groups[gi + 1].collapsed = false;
+                }
+              });
+              const again = $('.bm[data-id="' + cssEsc(bm.id) + '"] .bm-main');
+              if (again) again.focus();
+            },
+          });
+
+          const box = el("span", { class: "bm-icon" });
+          const src = faviconSrc(bm);
+          const letter = function () {
+            box.textContent = (bm.title.trim() || hostOf(bm.url) || "?")
+              .trim()
+              .charAt(0)
+              .toUpperCase();
+            box.style.background =
+              "hsl(" + hashHue(hostOf(bm.url) || bm.title) + " 58% 46%)";
+          };
+          if (src) {
+            const img = el("img", {
+              src: src,
+              alt: "",
+              loading: "lazy",
+              referrerpolicy: "no-referrer",
+              /* images are natively draggable: without this, grabbing a row by
+                 its favicon drags the picture instead of the bookmark */
+              draggable: "false",
+              onerror: function () {
+                img.remove();
+                letter();
+              },
+            });
+            box.append(img);
+          } else letter();
+
+          const link = el(
+            "a",
+            {
+              class: "bm-main",
+              href: bm.url,
+              draggable: "false",
+              dataset: { fk: "b:" + bm.id + ":open" },
+              title: bm.title + "\n" + bm.url,
+              target: state.settings.newTab ? "_blank" : null,
+              rel: state.settings.newTab ? "noopener noreferrer" : null,
+            },
+            [
+              box,
+              el("span", { class: "bm-text" }, [
+                el("span", { class: "bm-title", text: bm.title }),
+                el("span", {
+                  class: "bm-host",
+                  text: hostOf(bm.url) || bm.url,
+                }),
+              ]),
+            ],
+          );
+
+          const edit = el(
+            "button",
+            {
+              type: "button",
+              class: "icon-btn bm-edit",
+              "aria-label": "Edit " + bm.title,
+              title: "Edit",
+              dataset: { fk: "b:" + bm.id + ":edit" },
+              onclick: function (e) {
+                e.preventDefault();
+                openBookmarkDialog({ group: group, bm: bm });
+              },
+            },
+            [icon("pencil")],
+          );
+
+          row.append(link, edit);
+          return row;
+        }
+
+        function groupEl(group) {
+          const sec = el("section", {
+            class: "group" + (group.collapsed ? " collapsed" : ""),
+            dataset: { id: group.id },
+            /* The whole card accepts drops. A bookmark row or the grid stops
+               propagation when it handles the drop precisely, so this only sees
+               what they did not: a group being reordered, or a bookmark dropped
+               on the header / margins, which appends it to this group. */
+            ondragenter: function (e) {
+              if (
+                drag &&
+                (drag.kind === "bm" ||
+                  (drag.kind === "group" && drag.id !== group.id))
+              )
+                allowDrop(e);
+            },
+            ondragover: function (e) {
+              if (!drag) return;
+              if (drag.kind === "group" && drag.id !== group.id) {
+                allowDrop(e);
+                markEdge(sec, "y", sideOf(e, sec, "y"));
+              } else if (drag.kind === "bm") {
+                allowDrop(e);
+                mark(sec, "drop-into");
+              }
+            },
+            ondragleave: function (e) {
+              if (dropMark && dropMark.node === sec && reallyLeft(sec, e))
+                clearMark();
+            },
+            ondrop: function (e) {
+              if (!drag) return;
+              allowDrop(e);
+              if (drag.kind === "group" && drag.id !== group.id) {
+                const where = sideOf(e, sec, "y"),
+                  movedId = drag.id;
+                endDrag();
+                mutate(function () {
+                  const from = state.groups.findIndex((g) => g.id === movedId);
+                  const to = state.groups.findIndex((g) => g.id === group.id);
+                  if (from < 0 || to < 0) return;
+                  moveWithin(
+                    state.groups,
+                    from,
+                    where === "after" ? to + 1 : to,
+                  );
+                });
+              } else if (drag.kind === "bm") {
+                const movedId = drag.id;
+                endDrag();
+                mutate(function () {
+                  const src = findBookmark(movedId);
+                  if (!src) return;
+                  src.group.bookmarks.splice(src.index, 1);
+                  group.bookmarks.push(src.bm);
+                  group.collapsed = false;
+                });
+              }
+            },
+          });
+
+          /* the header itself carries draggable (see below), so the grip is now
+             purely the affordance — it used to be the only 14px of the header
+             that actually started a drag */
+          const grip = el(
+            "span",
+            { class: "grip", title: "Drag to reorder group" },
+            [icon("grip")],
+          );
+
+          const chev = el(
+            "button",
+            {
+              type: "button",
+              class: "icon-btn",
+              "aria-expanded": String(!group.collapsed),
+              dataset: { fk: "g:" + group.id + ":collapse" },
+              "aria-label":
+                (group.collapsed ? "Expand " : "Collapse ") + group.name,
+              onclick: function () {
+                mutate(function () {
+                  group.collapsed = !group.collapsed;
+                });
+              },
+            },
+            [
+              el("span", { class: "chevron", style: { display: "flex" } }, [
+                icon("chevron"),
+              ]),
+            ],
+          );
+
+          const head = el(
+            "div",
+            {
+              class: "group-head",
+              draggable: "true",
+              ondragstart: function (e) {
+                startDrag(e, "group", group.id, sec);
+              },
+            },
+            [
+              grip,
+              chev,
+              el("span", {
+                class: "group-name",
+                text: group.name,
+                title: "Click to collapse",
+                onclick: function () {
+                  mutate(function () {
+                    group.collapsed = !group.collapsed;
+                  });
+                },
+              }),
+              el("span", {
+                class: "count-pill",
+                text: String(group.bookmarks.length),
+              }),
+              el("span", { class: "head-tools" }, [
+                el(
+                  "button",
+                  {
+                    type: "button",
+                    class: "icon-btn",
+                    title: "Add a bookmark to " + group.name,
+                    "aria-label": "Add a bookmark to " + group.name,
+                    dataset: { fk: "g:" + group.id + ":add" },
+                    onclick: function () {
+                      openBookmarkDialog({ group: group });
+                    },
+                  },
+                  [icon("plus")],
+                ),
+                el(
+                  "button",
+                  {
+                    type: "button",
+                    class: "icon-btn",
+                    title: "Rename or delete group",
+                    "aria-label": "Rename or delete " + group.name,
+                    dataset: { fk: "g:" + group.id + ":edit" },
+                    onclick: function () {
+                      openGroupDialog(group);
+                    },
+                  },
+                  [icon("pencil")],
+                ),
+              ]),
+            ],
+          );
+
+          /* the card handles the general case; this only exists so dropping on
+             the list surface itself appends rather than bubbling to a "drop
+             into" that would look identical but read less precisely */
+          const grid = el("div", { class: "bm-grid" });
+
+          if (!group.bookmarks.length) {
+            grid.append(
+              el("p", {
+                class: "bm-empty",
+                text: "Empty — drag a bookmark here, or use the + above.",
+              }),
+            );
+          } else {
+            group.bookmarks.forEach((b) => grid.append(bookmarkEl(b, group)));
+          }
+
+          sec.append(head, grid);
+          return sec;
+        }
+
+        function renderGroups() {
+          groupsHost.textContent = "";
+          if (!state.groups.length) {
+            groupsHost.append(
+              el("div", { class: "empty" }, [
+                el("p", { text: "No bookmarks yet." }),
+                el("p", { class: "hint" }, [
+                  "Add your first link, or press ",
+                  el("kbd", { text: "b" }),
+                  " any time.",
+                ]),
+                el(
+                  "button",
+                  {
+                    type: "button",
+                    class: "btn btn-primary",
+                    onclick: function () {
+                      openBookmarkDialog({});
+                    },
+                  },
+                  ["Add a bookmark"],
+                ),
+              ]),
+            );
+          } else {
+            state.groups.forEach((g) => groupsHost.append(groupEl(g)));
+          }
+          groupsHost.append(
+            el("div", {
+              class: "empty",
+              id: "bmNoMatch",
+              hidden: true,
+              text: "No bookmarks match your search.",
+            }),
+          );
+        }
+
+        /* ==========================================================================
+   8. render — notes
+   ========================================================================== */
+        function cssEsc(s) {
+          if (window.CSS && CSS.escape) return CSS.escape(s);
+          return String(s).replace(/["\\\]\[]/g, "\\$&");
+        }
+
+        function autoGrow(ta) {
+          /* A note filtered out by the search carries [hidden], i.e. display:none,
+             where scrollHeight reads 0 — measuring it would bake height:2px into
+             the element and leave its text clipped once the search is cleared.
+             Testing the attribute rather than layout keeps this exact: [hidden]
+             is the only way a note is ever taken out of flow. */
+          if (ta.closest("[hidden]")) return;
+          ta.style.height = "auto";
+          ta.style.height = ta.scrollHeight + 2 + "px";
+        }
+
+        function noteEl(note) {
+          const card = el("div", {
+            class: "note",
+            dataset: { id: note.id, pinned: note.pinned ? "1" : "0" },
+            style: { "--note-bg": "var(--n" + note.color + ")" },
+            ondragenter: function (e) {
+              if (drag && drag.kind === "note" && drag.id !== note.id)
+                allowDrop(e);
+            },
+            ondragover: function (e) {
+              if (!drag || drag.kind !== "note" || drag.id === note.id) return;
+              allowDrop(e);
+              e.stopPropagation();
+              const axis = siblingAxis(card, ".note");
+              markEdge(card, axis, sideOf(e, card, axis));
+            },
+            ondragleave: function (e) {
+              if (dropMark && dropMark.node === card && reallyLeft(card, e))
+                clearMark();
+            },
+            ondrop: function (e) {
+              if (!drag || drag.kind !== "note" || drag.id === note.id) return;
+              allowDrop(e);
+              e.stopPropagation();
+              const axis = siblingAxis(card, ".note");
+              const where = sideOf(e, card, axis),
+                movedId = drag.id;
+              endDrag();
+              mutate(function () {
+                const from = state.notes.findIndex((n) => n.id === movedId);
+                const to = state.notes.findIndex((n) => n.id === note.id);
+                if (from < 0 || to < 0) return;
+                state.notes[from].pinned =
+                  note.pinned; /* dropping across the pin line adopts that side */
+                moveWithin(state.notes, from, where === "after" ? to + 1 : to);
+              });
+            },
+          });
+
+          /* handle is the whole header row, not just the grip icon; the
+             textarea below stays selectable because it is outside it */
+          const grip = el("span", { class: "grip", title: "Drag to reorder" }, [
+            icon("grip"),
+          ]);
+
+          const pin = el(
+            "button",
+            {
+              type: "button",
+              class: "icon-btn pin-btn",
+              "aria-pressed": String(!!note.pinned),
+              dataset: { fk: "n:" + note.id + ":pin" },
+              title: note.pinned ? "Unpin" : "Pin to top",
+              "aria-label": note.pinned ? "Unpin note" : "Pin note to top",
+              onclick: function () {
+                mutate(function () {
+                  const f = findNote(note.id);
+                  if (!f) return;
+                  f.note.pinned = !f.note.pinned;
+                  state.notes.splice(f.index, 1);
+                  /* re-insert at the pin boundary — end of the pinned run when pinning,
+           start of the unpinned run when unpinning: the same index either way */
+                  let k = 0;
+                  while (k < state.notes.length && state.notes[k].pinned) k++;
+                  state.notes.splice(k, 0, f.note);
+                });
+              },
+            },
+            [icon("pin")],
+          );
+
+          const swatches = el("div", { class: "swatches", hidden: true });
+          for (let c = 1; c <= 6; c++) {
+            (function (c) {
+              swatches.append(
+                el("button", {
+                  type: "button",
+                  class: "swatch",
+                  "aria-pressed": String(note.color === c),
+                  dataset: { fk: "n:" + note.id + ":sw" + c },
+                  "aria-label": "Colour " + c,
+                  title: "Colour " + c,
+                  style: { background: "var(--n" + c + ")" },
+                  onclick: function () {
+                    mutate(function () {
+                      const f = findNote(note.id);
+                      if (f) f.note.color = c;
+                    });
+                  },
+                }),
+              );
+            })(c);
+          }
+
+          const palette = el(
+            "button",
+            {
+              type: "button",
+              class: "icon-btn",
+              title: "Colour",
+              "aria-label": "Change note colour",
+              "aria-expanded": "false",
+              dataset: { fk: "n:" + note.id + ":color" },
+              onclick: function (e) {
+                const open = swatches.hidden;
+                $$(".swatches").forEach((s) => {
+                  s.hidden = true;
+                });
+                $$(".note [aria-expanded]").forEach((b) =>
+                  b.setAttribute("aria-expanded", "false"),
+                );
+                swatches.hidden = !open;
+                e.currentTarget.setAttribute("aria-expanded", String(open));
+              },
+            },
+            [icon("palette")],
+          );
+
+          const del = el(
+            "button",
+            {
+              type: "button",
+              class: "icon-btn danger",
+              title: "Delete note",
+              "aria-label": "Delete note",
+              dataset: { fk: "n:" + note.id + ":del" },
+              onclick: function () {
+                mutate(
+                  function () {
+                    const f = findNote(note.id);
+                    if (f) state.notes.splice(f.index, 1);
+                  },
+                  { undo: "Note deleted" },
+                );
+              },
+            },
+            [icon("trash")],
+          );
+
+          const ta = el("textarea", {
+            rows: "1",
+            placeholder: "Something to remember…",
+            "aria-label": "Note text",
+            dataset: { noteid: note.id, fk: "n:" + note.id + ":text" },
+            oninput: function () {
+              autoGrow(ta);
+              const f = findNote(note.id);
+              if (!f) return;
+              f.note.text = ta.value.slice(0, 20000);
+              f.note.updatedAt = Date.now();
+              save();
+              stamp.textContent = "Edited " + relTime(f.note.updatedAt);
+              stamp.hidden = !f.note.text.trim();
+              card.dataset.search = f.note.text.toLowerCase();
+            },
+            onblur: function () {
+              /* blur fires on mousedown, so removing the note here rebuilds the
+                 DOM before mouseup and the click being made never lands.
+                 Deferring one task lets that click complete first. */
+              setTimeout(function () {
+                if (document.activeElement === ta) return; /* focus came back */
+                const f = findNote(note.id);
+                if (
+                  f &&
+                  !f.note.text.trim() &&
+                  Date.now() - f.note.createdAt < 1000 * 60 * 60
+                ) {
+                  mutate(function () {
+                    const g = findNote(note.id);
+                    if (g) state.notes.splice(g.index, 1);
+                  });
+                }
+              }, 0);
+            },
+            onkeydown: function (e) {
+              if (e.altKey && (e.key === "ArrowUp" || e.key === "ArrowDown")) {
+                e.preventDefault();
+                const f = findNote(note.id);
+                if (!f) return;
+                mutate(function () {
+                  moveWithin(
+                    state.notes,
+                    f.index,
+                    e.key === "ArrowUp" ? f.index - 1 : f.index + 2,
+                  );
+                });
+                const again = document.querySelector(
+                  'textarea[data-noteid="' + cssEsc(note.id) + '"]',
+                );
+                if (again) again.focus();
+              }
+              if (e.key === "Escape") ta.blur();
+            },
+          });
+          ta.value = note.text;
+
+          const stamp = el("div", {
+            class: "note-stamp",
+            text: "Edited " + relTime(note.updatedAt),
+            hidden: !note.text.trim(),
+          });
+
+          card.dataset.search = note.text.toLowerCase();
+          card.append(
+            el(
+              "div",
+              {
+                class: "note-head",
+                draggable: "true",
+                ondragstart: function (e) {
+                  startDrag(e, "note", note.id, card);
+                },
+              },
+              [grip, el("span", { class: "note-tools" }, [pin, palette, del])],
+            ),
+            swatches,
+            ta,
+            stamp,
+          );
+          return card;
+        }
+
+        function renderNotes() {
+          notesHost.textContent = "";
+          if (!state.notes.length) {
+            notesHost.append(
+              el("div", { class: "empty" }, [
+                el("p", { text: "Nothing to remember yet." }),
+                el("p", { class: "hint" }, [
+                  "Sticky notes live here. Press ",
+                  el("kbd", { text: "n" }),
+                  " to add one.",
+                ]),
+                el(
+                  "button",
+                  {
+                    type: "button",
+                    class: "btn btn-primary",
+                    onclick: addNote,
+                  },
+                  ["Add a note"],
+                ),
+              ]),
+            );
+            notesHost.append(
+              el("div", {
+                class: "empty",
+                id: "noteNoMatch",
+                hidden: true,
+                text: "No notes match your search.",
+              }),
+            );
+            return;
+          }
+          const grid = el("div", {
+            class: "notes-list",
+            ondragenter: function (e) {
+              if (drag && drag.kind === "note") allowDrop(e);
+            },
+            ondragover: function (e) {
+              if (!drag || drag.kind !== "note") return;
+              allowDrop(e);
+              mark(grid, "drop-into");
+            },
+            ondragleave: function (e) {
+              if (dropMark && dropMark.node === grid && reallyLeft(grid, e))
+                clearMark();
+            },
+            ondrop: function (e) {
+              if (!drag || drag.kind !== "note") return;
+              allowDrop(e);
+              const movedId = drag.id;
+              endDrag();
+              mutate(function () {
+                const from = state.notes.findIndex((n) => n.id === movedId);
+                if (from < 0) return;
+                state.notes[from].pinned = false;
+                moveWithin(state.notes, from, state.notes.length);
+              });
+            },
+          });
+          state.notes.forEach((n) => grid.append(noteEl(n)));
+          notesHost.append(grid);
+          notesHost.append(
+            el("div", {
+              class: "empty",
+              id: "noteNoMatch",
+              hidden: true,
+              text: "No notes match your search.",
+            }),
+          );
+          /* size them synchronously: a deferred requestAnimationFrame does not run while
+     the tab is hidden, which would leave a cross-tab update rendering every
+     multi-line note clipped to a single line (the textarea is overflow:hidden) */
+          $$(".note textarea", notesHost).forEach(autoGrow);
+          /* re-measure once webfonts settle, in case they change the line height */
+          if (
+            document.fonts &&
+            document.fonts.ready &&
+            document.fonts.ready.then
+          ) {
+            document.fonts.ready
+              .then(function () {
+                $$(".note textarea", notesHost).forEach(autoGrow);
+              })
+              .catch(function () {});
+          }
+        }
+
+        function addNote() {
+          const n = {
+            id: uid(),
+            text: "",
+            color: (state.notes.length % 6) + 1,
+            pinned: false,
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+          };
+          mutate(function () {
+            let k = 0;
+            while (k < state.notes.length && state.notes[k].pinned) k++;
+            state.notes.splice(k, 0, n);
+          });
+          const ta = document.querySelector(
+            'textarea[data-noteid="' + cssEsc(n.id) + '"]',
+          );
+          if (ta) {
+            ta.focus();
+            if (ta.scrollIntoView)
+              ta.scrollIntoView({ block: "nearest", behavior: "smooth" });
+          }
+        }
+
+        /* ==========================================================================
+   9. counts, search, focus
+   ========================================================================== */
+        function updateCounts() {
+          const q = ($("#search").value || "").trim().toLowerCase();
+          if (q) return; /* applyFilter owns the numbers while filtering */
+          $("#bmCount").textContent = String(totalBookmarks());
+          $("#noteCount").textContent = String(state.notes.length);
+        }
+
+        function applyFilter() {
+          const q = ($("#search").value || "").trim().toLowerCase();
+          $("#searchClear").hidden = !q;
+
+          let bmHits = 0;
+          $$(".group", groupsHost).forEach(function (gEl) {
+            let hits = 0;
+            $$(".bm", gEl).forEach(function (b) {
+              const hit = !q || (b.dataset.search || "").indexOf(q) > -1;
+              b.hidden = !hit;
+              if (hit) hits++;
+            });
+            const emptyHint = $(".bm-empty", gEl);
+            if (emptyHint) emptyHint.hidden = !!q;
+            gEl.hidden = !!q && hits === 0;
+            gEl.classList.toggle("force-open", !!q && hits > 0);
+            const pill = $(".count-pill", gEl);
+            if (pill)
+              pill.textContent = String(q ? hits : $$(".bm", gEl).length);
+            bmHits += hits;
+          });
+
+          let noteHits = 0;
+          $$(".note", notesHost).forEach(function (n) {
+            const hit = !q || (n.dataset.search || "").indexOf(q) > -1;
+            const wasHidden = n.hidden;
+            n.hidden = !hit;
+            if (!hit) return;
+            noteHits++;
+            /* re-measure a note the search has just revealed — it may have been
+               sized while hidden, or never sized at all */
+            if (wasHidden) {
+              const ta = $("textarea", n);
+              if (ta) autoGrow(ta);
+            }
+          });
+
+          const bmNM = $("#bmNoMatch"),
+            nNM = $("#noteNoMatch");
+          if (bmNM) bmNM.hidden = !(q && bmHits === 0 && totalBookmarks() > 0);
+          if (nNM)
+            nNM.hidden = !(q && noteHits === 0 && state.notes.length > 0);
+          $$(
+            "#groups > .empty:not(#bmNoMatch), #notes > .empty:not(#noteNoMatch)",
+          ).forEach(function (n) {
+            n.hidden = !!q;
+          });
+
+          if (q) {
+            $("#bmCount").textContent = bmHits + " / " + totalBookmarks();
+            $("#noteCount").textContent = noteHits + " / " + state.notes.length;
+          } else {
+            $("#bmCount").textContent = String(totalBookmarks());
+            $("#noteCount").textContent = String(state.notes.length);
+          }
+        }
+
+        /* render() throws the whole list away, so a keyboard user would lose focus on
+   every collapse, pin or reorder. Each control carries a stable data-fk key
+   derived from its item id, which survives the rebuild. */
+        function captureFocus() {
+          const a = document.activeElement;
+          if (!a || !a.closest) return null;
+          const holder = a.closest("[data-fk]");
+          if (!holder) return null;
+          const f = { fk: holder.dataset.fk };
+          if (a.tagName === "TEXTAREA") {
+            f.start = a.selectionStart;
+            f.end = a.selectionEnd;
+          }
+          return f;
+        }
+        function restoreFocus(f) {
+          if (!f) return;
+          const n = document.querySelector('[data-fk="' + cssEsc(f.fk) + '"]');
+          if (!n || !n.focus) return;
+          n.focus();
+          if (f.start !== undefined && n.setSelectionRange) {
+            try {
+              n.setSelectionRange(f.start, f.end);
+            } catch (e) {}
+          }
+        }
+
+        function render() {
+          const f = captureFocus();
+          renderGroups();
+          renderNotes();
+          applyFilter();
+          restoreFocus(f);
+        }
+
+        /* ==========================================================================
+   10. bookmark dialog
+   ========================================================================== */
+        const bmDialog = $("#bmDialog"),
+          bmForm = $("#bmForm");
+        bmForm.noValidate = true;
+        let bmEditing = null; /* {group, bm} | null */
+
+        function openBookmarkDialog(o) {
+          o = o || {};
+          bmEditing = o.bm ? { group: o.group, bm: o.bm } : null;
+          $("#bmDlgTitle").textContent = bmEditing
+            ? "Edit bookmark"
+            : "Add bookmark";
+          $("#bmUrl").value = bmEditing ? bmEditing.bm.url : "";
+          $("#bmTitle").value = bmEditing ? bmEditing.bm.title : "";
+          $("#bmIcon").value = bmEditing ? bmEditing.bm.icon : "";
+          $("#bmDelete").hidden = !bmEditing;
+          $("#bmUrlErr").textContent = "";
+          $("#fUrl").classList.remove("invalid");
+          $("#bmIconErr").textContent = "";
+          $("#bmDialog details.adv").open = !!(bmEditing && bmEditing.bm.icon);
+
+          const sel = $("#bmGroup");
+          sel.textContent = "";
+          state.groups.forEach((g) =>
+            sel.append(el("option", { value: g.id, text: g.name })),
+          );
+          sel.append(
+            el("option", {
+              value: "__new__",
+              text: state.groups.length
+                ? "＋ New group…"
+                : "＋ Create the first group…",
+            }),
+          );
+          const want =
+            (o.group && o.group.id) ||
+            (bmEditing && bmEditing.group.id) ||
+            (state.groups[0] && state.groups[0].id) ||
+            "__new__";
+          sel.value = want;
+          syncNewGroupField();
+
+          openModal(bmDialog);
+          setTimeout(function () {
+            $(bmEditing ? "#bmTitle" : "#bmUrl").focus();
+          }, 20);
+        }
+        function syncNewGroupField() {
+          const isNew = $("#bmGroup").value === "__new__";
+          $("#fNewGroup").hidden = !isNew;
+          if (isNew && !$("#bmNewGroup").value)
+            $("#bmNewGroup").value = state.groups.length ? "" : "Bookmarks";
+        }
+        $("#bmGroup").addEventListener("change", syncNewGroupField);
+
+        $("#bmUrl").addEventListener("blur", function () {
+          const url = normalizeUrl($("#bmUrl").value);
+          if (url && !$("#bmTitle").value.trim())
+            $("#bmTitle").value = labelOf(url);
+        });
+
+        bmForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          const rawUrl = $("#bmUrl").value;
+          const url = normalizeUrl(rawUrl);
+          if (!url) {
+            $("#fUrl").classList.add("invalid");
+            $("#bmUrlErr").textContent = rawUrl.trim()
+              ? "That is not a link this page can open (http, https, mailto, ftp and file only)."
+              : "A link is required.";
+            $("#bmUrl").focus();
+            return;
+          }
+          const rawIcon = $("#bmIcon").value.trim();
+          const iconUrl = normalizeIcon(rawIcon);
+          if (rawIcon && !iconUrl) {
+            $("#bmIconErr").textContent =
+              "Icon must be an http(s) address or a base64 data:image URI.";
+            $("#bmDialog details.adv").open = true;
+            return;
+          }
+          const title = ($("#bmTitle").value.trim() || labelOf(url)).slice(
+            0,
+            160,
+          );
+          const groupChoice = $("#bmGroup").value;
+          const newName = $("#bmNewGroup").value.trim().slice(0, 80);
+
+          if (groupChoice === "__new__" && !newName) {
+            $("#bmNewGroup").focus();
+            toast("Give the new group a name.", { kind: "err" });
+            return;
+          }
+
+          mutate(function () {
+            let g;
+            if (groupChoice === "__new__") {
+              g = {
+                id: uid(),
+                name: newName || "Bookmarks",
+                collapsed: false,
+                bookmarks: [],
+              };
+              state.groups.push(g);
+            } else {
+              g = findGroup(groupChoice) || state.groups[0];
+              if (!g) {
+                g = {
+                  id: uid(),
+                  name: "Bookmarks",
+                  collapsed: false,
+                  bookmarks: [],
+                };
+                state.groups.push(g);
+              }
+            }
+            if (bmEditing) {
+              const f = findBookmark(bmEditing.bm.id);
+              if (f) {
+                f.bm.url = url;
+                f.bm.title = title;
+                f.bm.icon = iconUrl;
+                if (f.group !== g) {
+                  f.group.bookmarks.splice(f.index, 1);
+                  g.bookmarks.push(f.bm);
+                }
+              }
+            } else {
+              g.bookmarks.push({
+                id: uid(),
+                url: url,
+                title: title,
+                icon: iconUrl,
+              });
+              g.collapsed = false;
+            }
+          });
+          $("#bmNewGroup").value = "";
+          bmDialog.close();
+        });
+
+        $("#bmCancel").addEventListener("click", function () {
+          bmDialog.close();
+        });
+        $("#bmDelete").addEventListener("click", function () {
+          if (!bmEditing) return;
+          const id = bmEditing.bm.id,
+            name = bmEditing.bm.title;
+          bmDialog.close();
+          mutate(
+            function () {
+              const f = findBookmark(id);
+              if (f) f.group.bookmarks.splice(f.index, 1);
+            },
+            { undo: "“" + name + "” deleted" },
+          );
+        });
+
+        /* ==========================================================================
+   11. group dialog
+   ========================================================================== */
+        const grpDialog = $("#grpDialog"),
+          grpForm = $("#grpForm");
+        grpForm.noValidate = true;
+        let grpEditing = null;
+
+        function openGroupDialog(group) {
+          grpEditing = group || null;
+          $("#grpDlgTitle").textContent = grpEditing
+            ? "Rename group"
+            : "Add group";
+          $("#grpName").value = grpEditing ? grpEditing.name : "";
+          $("#grpDelete").hidden = !grpEditing;
+          openModal(grpDialog);
+          setTimeout(function () {
+            $("#grpName").focus();
+            $("#grpName").select();
+          }, 20);
+        }
+        grpForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          const name = $("#grpName").value.trim().slice(0, 80);
+          if (!name) {
+            $("#grpName").focus();
+            toast("Give the group a name.", { kind: "err" });
+            return;
+          }
+          mutate(function () {
+            if (grpEditing) {
+              const g = findGroup(grpEditing.id);
+              if (g) g.name = name;
+            } else
+              state.groups.push({
+                id: uid(),
+                name: name,
+                collapsed: false,
+                bookmarks: [],
+              });
+          });
+          grpDialog.close();
+        });
+        $("#grpCancel").addEventListener("click", function () {
+          grpDialog.close();
+        });
+        $("#grpDelete").addEventListener("click", function () {
+          if (!grpEditing) return;
+          const id = grpEditing.id,
+            name = grpEditing.name,
+            n = grpEditing.bookmarks.length;
+          grpDialog.close();
+          mutate(
+            function () {
+              const i = state.groups.findIndex((g) => g.id === id);
+              if (i > -1) state.groups.splice(i, 1);
+            },
+            {
+              undo:
+                "“" +
+                name +
+                "” deleted" +
+                (n ? " with " + n + " bookmark" + (n === 1 ? "" : "s") : ""),
+            },
+          );
+        });
+
+        /* ==========================================================================
+   12. theme
+   ========================================================================== */
+        function applyTheme() {
+          const t = state.settings.theme;
+          if (t === "system")
+            document.documentElement.removeAttribute("data-theme");
+          else document.documentElement.setAttribute("data-theme", t);
+          const btn = $("#themeBtn");
+          btn.textContent = "";
+          btn.append(
+            icon(t === "light" ? "sun" : t === "dark" ? "moon" : "monitor"),
+          );
+          btn.title = "Theme: " + t + " (click to change)";
+          btn.setAttribute("aria-label", "Theme: " + t + ". Click to change.");
+          $$("#themeSeg button").forEach((b) =>
+            b.setAttribute("aria-pressed", String(b.dataset.themeVal === t)),
+          );
+        }
+        $("#themeBtn").addEventListener("click", function () {
+          const order = ["system", "light", "dark"];
+          state.settings.theme =
+            order[(order.indexOf(state.settings.theme) + 1) % 3];
+          applyTheme();
+          save();
+        });
+        $$("#themeSeg button").forEach(function (b) {
+          b.addEventListener("click", function () {
+            state.settings.theme = b.dataset.themeVal;
+            applyTheme();
+            save();
+          });
+        });
+
+        function applyClock() {
+          $("#clock").hidden = !state.settings.clock;
+        }
+
+        /* ==========================================================================
+   12b. backdrop — one photo per day, with an offline colour wash underneath
+   ========================================================================== */
+        const PHOTO_HOST = "https://picsum.photos";
+        let bgRequest = 0; /* guards against a slow load landing after a mode change */
+        let photoWarned = false;
+
+        function todayKey() {
+          const d = new Date();
+          return (
+            d.getFullYear() +
+            "-" +
+            String(d.getMonth() + 1).padStart(2, "0") +
+            "-" +
+            String(d.getDate()).padStart(2, "0")
+          );
+        }
+        function bgSeed() {
+          const n = state.settings.bgNonce;
+          return todayKey() + (n ? "-" + n : "");
+        }
+        /* Round the request up to a few fixed sizes: a stable URL is a cache hit, while
+   one derived from the exact window size would refetch on every resize. */
+        function bgPixels() {
+          const w = Math.max(
+            (window.screen && window.screen.width) || 0,
+            window.innerWidth || 0,
+            1280,
+          );
+          const px = w * Math.min(window.devicePixelRatio || 1, 2);
+          const width =
+            px <= 1600 ? 1600 : px <= 2100 ? 1920 : px <= 2800 ? 2560 : 3200;
+          return { w: width, h: Math.round((width * 9) / 16) };
+        }
+        function photoUrl(seed) {
+          const p = bgPixels();
+          return (
+            PHOTO_HOST +
+            "/seed/" +
+            encodeURIComponent(seed) +
+            "/" +
+            p.w +
+            "/" +
+            p.h
+          );
+        }
+        /* deterministic two-hue wash: same seed, same colours, no network */
+        function washFor(seed) {
+          const a = hashHue(seed),
+            b = (a + 40 + (hashHue(seed + "~") % 110)) % 360;
+          return (
+            "linear-gradient(145deg, hsl(" +
+            a +
+            " 58% 46%) 0%, hsl(" +
+            b +
+            " 54% 38%) 100%)"
+          );
+        }
+
+        function setBgBusy(on) {
+          const b = $("#bgNext");
+          if (b) b.classList.toggle("busy", !!on);
+        }
+
+        function applyBackground() {
+          const mode = state.settings.background;
+          const root = document.documentElement;
+          const layer = $("#bg"),
+            credit = $("#bgCredit"),
+            bar = $("#bgBar");
+          const mine = ++bgRequest;
+
+          if (mode === "plain") {
+            root.removeAttribute("data-bg");
+            layer.classList.remove("on");
+            layer.style.backgroundImage = "";
+            credit.hidden = true;
+            bar.hidden = true; /* nothing to reshuffle */
+            setBgBusy(false);
+            return;
+          }
+          bar.hidden = false;
+
+          root.setAttribute("data-bg", "art");
+          const seed = bgSeed();
+          /* paint the wash first either way, so there is never a bare flash and so an
+     offline load has something to fall back to without a second repaint */
+          layer.style.backgroundImage = washFor(seed);
+          layer.classList.add("on");
+          credit.hidden = true;
+          if (mode === "gradient") {
+            setBgBusy(false);
+            return;
+          }
+          setBgBusy(true);
+
+          const url = photoUrl(seed);
+          const img = new Image();
+          img.referrerPolicy = "no-referrer";
+          img.onload = function () {
+            if (mine !== bgRequest) return; /* mode changed while loading */
+            setBgBusy(false);
+            layer.style.backgroundImage = 'url("' + url + '")';
+            credit.hidden = false;
+          };
+          img.onerror = function () {
+            if (mine !== bgRequest) return;
+            setBgBusy(false);
+            if (!photoWarned) {
+              photoWarned = true;
+              toast(
+                "Could not reach the photo service — showing a colour wash instead.",
+                { ms: 6000 },
+              );
+            }
+          };
+          img.src = url;
+        }
+
+        $$("#bgSeg button").forEach(function (b) {
+          b.addEventListener("click", function () {
+            state.settings.background = b.dataset.bgVal;
+            photoWarned = false;
+            save();
+            applyBackground();
+            refreshBgControls();
+          });
+        });
+        /* Shared by the Settings button and the corner one. It keeps whichever
+           backdrop mode is active — shuffling a colour wash should give another
+           wash, not silently switch on the network. */
+        function shuffleBackground() {
+          if (state.settings.background === "plain") return;
+          state.settings.bgNonce = Math.random().toString(36).slice(2, 7);
+          photoWarned = false;
+          save();
+          applyBackground();
+          refreshBgControls();
+        }
+        $("#bgShuffle").addEventListener("click", shuffleBackground);
+        /* the markup ships the button empty; its glyph is injected here, the same
+           way the theme button gets one */
+        $("#bgNext").append(icon("refresh"));
+        $("#bgNext").addEventListener("click", shuffleBackground);
+
+        function refreshBgControls() {
+          const mode = state.settings.background;
+          $$("#bgSeg button").forEach((b) =>
+            b.setAttribute("aria-pressed", String(b.dataset.bgVal === mode)),
+          );
+          $("#bgShuffle").disabled = mode === "plain";
+          $("#bgNote").textContent =
+            mode === "photo"
+              ? "One photo a day from picsum.photos (Lorem Picsum, Unsplash imagery). It changes at midnight, is cached by your browser, and falls back to a colour wash offline."
+              : mode === "gradient"
+                ? "A colour pair generated from today\u2019s date. No network request, works offline."
+                : "No backdrop \u2014 just the flat theme colour.";
+        }
+
+        /* ==========================================================================
+   13. settings dialog
+   ========================================================================== */
+        const setDialog = $("#setDialog");
+
+        function fmtBytes(n) {
+          if (n < 1024) return n + " B";
+          if (n < 1024 * 1024) return (n / 1024).toFixed(1) + " KB";
+          return (n / 1048576).toFixed(2) + " MB";
+        }
+        function refreshSettings() {
+          $("#optFavicons").checked = state.settings.favicons;
+          $("#optNewTab").checked = state.settings.newTab;
+          $("#optClock").checked = state.settings.clock;
+          applyTheme();
+          refreshBgControls();
+
+          const payload = serialize();
+          let bytes = payload.length;
+          try {
+            bytes = new Blob([payload]).size;
+          } catch (e) {}
+          const pct = Math.min(100, (bytes / QUOTA_GUESS) * 100);
+          $("#storageUsage").textContent =
+            totalBookmarks() +
+            " bookmark" +
+            (totalBookmarks() === 1 ? "" : "s") +
+            " and " +
+            state.notes.length +
+            " note" +
+            (state.notes.length === 1 ? "" : "s") +
+            " — " +
+            fmtBytes(bytes) +
+            " of roughly " +
+            fmtBytes(QUOTA_GUESS) +
+            " available.";
+          $("#storageBar").style.width = Math.max(pct, bytes ? 1.5 : 0) + "%";
+
+          const warn = $("#storageWarn");
+          warn.hidden = store.ok;
+          if (!store.ok)
+            warn.textContent =
+              "This browser is blocking local storage for this page, so nothing you add will survive a reload. Check that cookies and site data are not blocked for local files.";
+
+          $("#selfUrl").textContent = location.href;
+        }
+        $("#settingsBtn").addEventListener("click", function () {
+          refreshSettings();
+          openModal(setDialog);
+        });
+        $("#setClose").addEventListener("click", function () {
+          setDialog.close();
+        });
+
+        $("#optFavicons").addEventListener("change", function (e) {
+          state.settings.favicons = e.target.checked;
+          save();
+          render();
+        });
+        $("#optNewTab").addEventListener("change", function (e) {
+          state.settings.newTab = e.target.checked;
+          save();
+          render();
+        });
+        $("#optClock").addEventListener("change", function (e) {
+          state.settings.clock = e.target.checked;
+          save();
+          applyClock();
+        });
+
+        /* ---------- export ---------- */
+        $("#exportBtn").addEventListener("click", function () {
+          const payload = JSON.stringify(
+            {
+              version: VERSION,
+              exportedAt: new Date().toISOString(),
+              groups: state.groups,
+              notes: state.notes,
+              settings: state.settings,
+            },
+            null,
+            2,
+          );
+          try {
+            const blob = new Blob([payload], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const d = new Date();
+            const stampName =
+              d.getFullYear() +
+              "-" +
+              String(d.getMonth() + 1).padStart(2, "0") +
+              "-" +
+              String(d.getDate()).padStart(2, "0");
+            const a = el("a", {
+              href: url,
+              download: "homepage-backup-" + stampName + ".json",
+            });
+            document.body.append(a);
+            a.click();
+            a.remove();
+            setTimeout(function () {
+              URL.revokeObjectURL(url);
+            }, 4000);
+            toast("Backup downloaded.");
+          } catch (e) {
+            toast(
+              "Download failed — use “Copy JSON” and paste it into a file instead.",
+              { kind: "err", ms: 8000 },
+            );
+          }
+        });
+
+        $("#copyBtn").addEventListener("click", async function () {
+          const payload = JSON.stringify(
+            {
+              version: VERSION,
+              groups: state.groups,
+              notes: state.notes,
+              settings: state.settings,
+            },
+            null,
+            2,
+          );
+          try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              await navigator.clipboard.writeText(payload);
+              toast("JSON copied to the clipboard.");
+              return;
+            }
+            throw new Error("no clipboard api");
+          } catch (e) {
+            const ta = el("textarea", {
+              style: { position: "fixed", top: "-1000px", opacity: "0" },
+            });
+            ta.value = payload;
+            document.body.append(ta);
+            ta.select();
+            let ok = false;
+            try {
+              ok = document.execCommand("copy");
+            } catch (err) {}
+            ta.remove();
+            toast(
+              ok
+                ? "JSON copied to the clipboard."
+                : "Could not copy — use “Download backup” instead.",
+              { kind: ok ? undefined : "err" },
+            );
+          }
+        });
+
+        /* ---------- import ---------- */
+        const impDialog = $("#impDialog");
+        let pendingImport = null;
+
+        function plural(n, word) {
+          return n + " " + word + (n === 1 ? "" : "s");
+        }
+
+        function openImportDialog(incoming, extra) {
+          const bms = incoming.groups.reduce(
+            (n, g) => n + g.bookmarks.length,
+            0,
+          );
+          if (!bms && !incoming.notes.length) {
+            toast("No bookmarks or notes were found in that file.", {
+              kind: "err",
+              ms: 7000,
+            });
+            return;
+          }
+          pendingImport = incoming;
+          let msg =
+            "This file holds " +
+            plural(bms, "bookmark") +
+            " in " +
+            plural(incoming.groups.length, "group");
+          if (incoming.notes.length)
+            msg += " and " + plural(incoming.notes.length, "note");
+          msg +=
+            ". " +
+            (extra ? extra + " " : "") +
+            "Merge it into what you already have, or replace everything?";
+          $("#impSummary").textContent = msg;
+          openModal(impDialog);
+        }
+
+        function readTextFile(file, maxBytes, onText) {
+          if (file.size > maxBytes) {
+            toast(
+              "That file is larger than this page can take in (" +
+                Math.round(maxBytes / 1048576) +
+                " MB).",
+              { kind: "err", ms: 8000 },
+            );
+            return;
+          }
+          const fr = new FileReader();
+          fr.onerror = function () {
+            toast("Could not read that file.", { kind: "err" });
+          };
+          fr.onload = function () {
+            onText(String(fr.result));
+          };
+          fr.readAsText(file);
+        }
+
+        $("#importBtn").addEventListener("click", function () {
+          $("#importFile").click();
+        });
+        $("#importFile").addEventListener("change", function (e) {
+          const file = e.target.files && e.target.files[0];
+          e.target.value = "";
+          if (!file) return;
+          readTextFile(file, 8 * 1024 * 1024, function (text) {
+            let parsed;
+            try {
+              parsed = JSON.parse(text);
+            } catch (err) {
+              toast("That file is not valid JSON.", { kind: "err" });
+              return;
+            }
+            openImportDialog(coerce(parsed));
+          });
+        });
+
+        /* ---------- import a browser's bookmarks HTML (Netscape format) ----------
+   Edge, Chrome and Firefox all export the same shape: a folder is an <H3>
+   immediately followed by the <DL> holding its contents, so a DL's name is the
+   last H3 before it in document order. Folder nesting comes from the DL
+   ancestry. The toolbar folder ("Favourites Bar") is dropped only when there
+   is a real folder beneath it, so "Favourites Bar > RealPage" becomes
+   "RealPage" while links sitting directly on the bar still get their own
+   "Favourites Bar" group instead of being lumped in with loose root links. */
+        function parseBookmarksHtml(text) {
+          const doc = new DOMParser().parseFromString(text, "text/html");
+          const named = new Map();
+          let lastH3 = null;
+          Array.from(doc.querySelectorAll("h3, dl")).forEach(function (n) {
+            if (n.tagName === "H3") lastH3 = n;
+            else named.set(n, lastH3);
+          });
+          const out = [];
+          Array.from(doc.querySelectorAll("a[href]")).forEach(function (a) {
+            const path = [];
+            for (let n = a.parentElement; n; n = n.parentElement) {
+              if (n.tagName !== "DL") continue;
+              const h3 = named.get(n);
+              if (!h3) continue; /* the root list has no name */
+              const nm = h3.textContent.trim();
+              if (nm)
+                path.unshift({
+                  name: nm,
+                  toolbar:
+                    h3.getAttribute("personal_toolbar_folder") === "true",
+                });
+            }
+            let segs = path;
+            if (segs.length > 1 && segs[0].toolbar) segs = segs.slice(1);
+            out.push({
+              path: segs.map((sg) => sg.name),
+              url: a.getAttribute("href") || "",
+              title: a.textContent.trim(),
+              icon: a.getAttribute("icon") || "",
+            });
+          });
+          return out;
+        }
+
+        function bookmarksHtmlToGroups(items) {
+          const byName = new Map();
+          const groups = [];
+          let skipped = 0,
+            dupes = 0;
+          items.forEach(function (it) {
+            const url = normalizeUrl(it.url);
+            if (!url) {
+              skipped++;
+              return;
+            }
+            const name = (it.path.join(" / ") || "Other favourites").slice(
+              0,
+              80,
+            );
+            let g = byName.get(name);
+            if (!g) {
+              g = { id: uid(), name: name, collapsed: false, bookmarks: [] };
+              byName.set(name, g);
+              groups.push(g);
+            }
+            if (g.bookmarks.some((b) => b.url === url)) {
+              dupes++;
+              return;
+            }
+            g.bookmarks.push({
+              id: uid(),
+              url: url,
+              title: (it.title || labelOf(url)).slice(0, 160),
+              icon: normalizeIcon(it.icon),
+            });
+          });
+          return { groups: groups, skipped: skipped, dupes: dupes };
+        }
+
+        $("#importHtmlBtn").addEventListener("click", function () {
+          $("#importHtmlFile").click();
+        });
+        $("#importHtmlFile").addEventListener("change", function (e) {
+          const file = e.target.files && e.target.files[0];
+          e.target.value = "";
+          if (!file) return;
+          readTextFile(file, 20 * 1024 * 1024, function (text) {
+            const items = parseBookmarksHtml(text);
+            if (!items.length) {
+              toast(
+                "No bookmarks were found in that file — is it a bookmarks export?",
+                { kind: "err", ms: 8000 },
+              );
+              return;
+            }
+            const res = bookmarksHtmlToGroups(items);
+            const withIcons = res.groups.reduce(
+              (n, g) => n + g.bookmarks.filter((b) => b.icon).length,
+              0,
+            );
+            const notes = [];
+            if (withIcons) notes.push(withIcons + " carry their own icon");
+            if (res.skipped)
+              notes.push(
+                res.skipped + " skipped as an address this page cannot open",
+              );
+            if (res.dupes)
+              notes.push(
+                res.dupes +
+                  " duplicate" +
+                  (res.dupes === 1 ? "" : "s") +
+                  " dropped",
+              );
+            openImportDialog(
+              {
+                version: VERSION,
+                groups: res.groups,
+                notes: [],
+                settings: clone(state.settings),
+              },
+              notes.length ? "(" + notes.join(", ") + ".)" : "",
+            );
+          });
+        });
+        $("#impCancel").addEventListener("click", function () {
+          pendingImport = null;
+          impDialog.close();
+        });
+        $("#impReplace").addEventListener("click", function () {
+          if (!pendingImport) return;
+          const inc = pendingImport;
+          pendingImport = null;
+          impDialog.close();
+          mutate(
+            function () {
+              state.groups = inc.groups;
+              state.notes = inc.notes;
+              state.settings = inc.settings;
+            },
+            { undo: "Everything replaced from the backup" },
+          );
+          applyTheme();
+          applyClock();
+          applyBackground();
+          refreshSettings();
+        });
+        $("#impMerge").addEventListener("click", function () {
+          if (!pendingImport) return;
+          const inc = pendingImport;
+          pendingImport = null;
+          impDialog.close();
+          let addedB = 0,
+            addedN = 0;
+          mutate(
+            function () {
+              inc.groups.forEach(function (ig) {
+                let g = state.groups.find(
+                  (x) => x.name.toLowerCase() === ig.name.toLowerCase(),
+                );
+                if (!g) {
+                  g = {
+                    id: uid(),
+                    name: ig.name,
+                    collapsed: false,
+                    bookmarks: [],
+                  };
+                  state.groups.push(g);
+                }
+                ig.bookmarks.forEach(function (ib) {
+                  if (g.bookmarks.some((b) => b.url === ib.url)) return;
+                  g.bookmarks.push({
+                    id: uid(),
+                    url: ib.url,
+                    title: ib.title,
+                    icon: ib.icon,
+                  });
+                  addedB++;
+                });
+              });
+              inc.notes.forEach(function (inote) {
+                if (
+                  inote.text.trim() &&
+                  state.notes.some((n) => n.text === inote.text)
+                )
+                  return;
+                state.notes.push({
+                  id: uid(),
+                  text: inote.text,
+                  color: inote.color,
+                  pinned: inote.pinned,
+                  createdAt: inote.createdAt,
+                  updatedAt: inote.updatedAt,
+                });
+                addedN++;
+              });
+            },
+            {
+              undo:
+                "Merged " +
+                addedB +
+                " bookmark" +
+                (addedB === 1 ? "" : "s") +
+                " and " +
+                addedN +
+                " note" +
+                (addedN === 1 ? "" : "s"),
+            },
+          );
+          refreshSettings();
+        });
+
+        /* ---------- clear ---------- */
+        let clearArmed = null;
+        $("#clearBtn").addEventListener("click", function (e) {
+          const btn = e.currentTarget;
+          if (!clearArmed) {
+            btn.textContent = "Click again to erase everything";
+            clearArmed = setTimeout(function () {
+              clearArmed = null;
+              btn.textContent = "Erase all bookmarks and notes";
+            }, 4000);
+            return;
+          }
+          clearTimeout(clearArmed);
+          clearArmed = null;
+          btn.textContent = "Erase all bookmarks and notes";
+          mutate(
+            function () {
+              state.groups = [];
+              state.notes = [];
+            },
+            { undo: "Everything erased" },
+          );
+          refreshSettings();
+        });
+
+        /* ---------- copy this page's address ---------- */
+        $("#copyUrlBtn").addEventListener("click", async function () {
+          try {
+            await navigator.clipboard.writeText(location.href);
+            toast("Address copied.");
+          } catch (e) {
+            const r = document.createRange();
+            r.selectNodeContents($("#selfUrl"));
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(r);
+            toast("Address selected — press ⌘C / Ctrl+C to copy.", {
+              ms: 6000,
+            });
+          }
+        });
+
+        /* ---------- close dialogs by clicking the backdrop ---------- */
+        $$("dialog").forEach(function (d) {
+          d.addEventListener("click", function (e) {
+            if (e.target === d) d.close();
+          });
+          d.addEventListener("close", function () {
+            const i = modalStack.indexOf(d);
+            if (i > -1) modalStack.splice(i, 1);
+            placeToasts();
+          });
+        });
+
+        /* ==========================================================================
+   14. search
+   ========================================================================== */
+        const searchInput = $("#search");
+        searchInput.addEventListener("input", applyFilter);
+        searchInput.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") {
+            searchInput.value = "";
+            applyFilter();
+            searchInput.blur();
+          }
+          if (e.key === "Enter") {
+            const first = $$(".bm", groupsHost).find(
+              (b) => !b.hidden && !b.closest(".group").hidden,
+            );
+            if (first) {
+              e.preventDefault();
+              $(".bm-main", first).click();
+            }
+          }
+        });
+        $("#searchClear").addEventListener("click", function () {
+          searchInput.value = "";
+          applyFilter();
+          searchInput.focus();
+        });
+
+        /* ==========================================================================
+   15. top bar buttons + keyboard
+   ========================================================================== */
+        $("#addBookmarkBtn").addEventListener("click", function () {
+          openBookmarkDialog({});
+        });
+        $("#addNoteBtn").addEventListener("click", addNote);
+        $("#addGroupBtn").addEventListener("click", function () {
+          openGroupDialog(null);
+        });
+
+        document.addEventListener("keydown", function (e) {
+          if (e.metaKey || e.ctrlKey || e.altKey) return;
+          if (document.querySelector("dialog[open]")) return;
+          const t = e.target;
+          const typing =
+            t &&
+            (t.tagName === "INPUT" ||
+              t.tagName === "TEXTAREA" ||
+              t.tagName === "SELECT" ||
+              t.isContentEditable);
+          if (typing) return;
+          if (e.key === "/") {
+            e.preventDefault();
+            searchInput.focus();
+            searchInput.select();
+          } else if (e.key === "b") {
+            e.preventDefault();
+            openBookmarkDialog({});
+          } else if (e.key === "n") {
+            e.preventDefault();
+            addNote();
+          } else if (e.key === "g") {
+            e.preventDefault();
+            openGroupDialog(null);
+          }
+        });
+
+        /* close any open colour picker when clicking elsewhere */
+        document.addEventListener("click", function (e) {
+          if (
+            e.target.closest &&
+            (e.target.closest(".swatches") ||
+              e.target.closest("[aria-expanded]"))
+          )
+            return;
+          $$(".swatches").forEach(function (s) {
+            s.hidden = true;
+          });
+          $$(".note [aria-expanded]").forEach((b) =>
+            b.setAttribute("aria-expanded", "false"),
+          );
+        });
+
+        /* ==========================================================================
+   16. clock
+   ========================================================================== */
+        function tickClock() {
+          if (!state.settings.clock) return;
+          const d = new Date();
+          $("#clockTime").textContent = d.toLocaleTimeString(undefined, {
+            hour: "numeric",
+            minute: "2-digit",
+          });
+          const h = d.getHours();
+          const greet =
+            h < 5
+              ? "Good night"
+              : h < 12
+                ? "Good morning"
+                : h < 17
+                  ? "Good afternoon"
+                  : h < 22
+                    ? "Good evening"
+                    : "Good night";
+          $("#clockSub").textContent =
+            greet +
+            " · " +
+            d.toLocaleDateString(undefined, {
+              weekday: "short",
+              month: "short",
+              day: "numeric",
+            });
+        }
+
+        /* ==========================================================================
+   17. cross-tab sync + flush on leave
+   ========================================================================== */
+        window.addEventListener("storage", function (e) {
+          if (e.key !== KEY && e.key !== null) return;
+          const a = document.activeElement;
+          if (a && a.tagName === "TEXTAREA")
+            return; /* never clobber an in-progress note */
+          if (document.querySelector("dialog[open]")) return;
+          const fresh = load();
+          if (JSON.stringify(fresh) === JSON.stringify(state)) return;
+          state = fresh;
+          lastWritten = serialize();
+          applyTheme();
+          applyClock();
+          applyBackground();
+          render();
+          toast("Updated from another tab.");
+        });
+
+        function leaving() {
+          flush();
+        }
+        window.addEventListener("pagehide", leaving);
+        window.addEventListener("beforeunload", leaving);
+        document.addEventListener("visibilitychange", function () {
+          if (document.visibilityState === "hidden") leaving();
+        });
+
+        /* ==========================================================================
+   18. boot
+   ========================================================================== */
+        lastWritten = store.read() || "";
+        normalize();
+        applyTheme();
+        applyClock();
+        applyBackground();
+        render();
+        tickClock();
+        setInterval(tickClock, 15000);
+
+        if (!store.ok) {
+          toast(
+            "This browser is blocking local storage for this page — nothing will be saved. Open Settings for details.",
+            { kind: "err", ms: 14000 },
+          );
+        }
+      })();
+    </script>
+  </body>
+</html>
