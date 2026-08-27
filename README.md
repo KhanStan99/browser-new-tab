@@ -55,7 +55,7 @@ Most start pages make you scroll, or hide your links behind folders, or want an 
 
 ## Quick start
 
-1. Download [`home-site.html`](home-site.html).
+1. Download [`index.html`](index.html).
 2. Save it somewhere permanent — moving it later breaks the address you set below.
 3. Open it in your browser.
 4. Open **⚙ Settings → How to set this page as your home page**, copy the address shown, and paste it into your browser:
