@@ -1663,52 +1663,29 @@
         <div class="divider"></div>
 
         <div class="field">
-          <label>Backup</label>
+          <label>Bookmarks &amp; backup</label>
           <p class="sub" id="storageUsage">&nbsp;</p>
           <div class="meter"><i id="storageBar" style="width: 0%"></i></div>
           <div class="row" style="flex-wrap: wrap; margin-top: 8px">
             <button type="button" class="btn" id="exportBtn">
-              Download backup
+              Export bookmarks HTML
             </button>
-            <button type="button" class="btn" id="copyBtn">Copy JSON</button>
+            <button type="button" class="btn" id="copyBtn">Copy HTML</button>
             <button type="button" class="btn" id="importBtn">
-              Restore from file&hellip;
-            </button>
-            <input
-              type="file"
-              id="importFile"
-              accept="application/json,.json"
-              hidden
-            />
-          </div>
-          <p class="sub">
-            Clearing your browser&rsquo;s cookies and site data erases this
-            page&rsquo;s storage. Download a backup now and then if the notes
-            matter.
-          </p>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="field">
-          <label>Bring in bookmarks you already have</label>
-          <p class="sub">
-            Edge, Chrome and Firefox can each export their bookmarks to an HTML
-            file. Folders become groups, a nested folder becomes &ldquo;Parent /
-            Child&rdquo;, and any icons stored inside the file are used directly
-            &mdash; so those bookmarks need no favicon service and work offline.
-          </p>
-          <div class="row" style="flex-wrap: wrap; margin-top: 2px">
-            <button type="button" class="btn" id="importHtmlBtn">
               Import bookmarks HTML&hellip;
             </button>
             <input
               type="file"
-              id="importHtmlFile"
-              accept="text/html,.html,.htm"
+              id="importFile"
+              accept="text/html,.html,.htm,application/json,.json"
               hidden
             />
           </div>
+          <p class="sub">
+            Standard Netscape bookmarks HTML format compatible with Chrome,
+            Edge, Firefox, and Safari. Folders become groups and embedded icons
+            are preserved.
+          </p>
         </div>
 
         <div class="divider"></div>
@@ -1769,7 +1746,7 @@
     <!-- ============================ import dialog ============================ -->
     <dialog id="impDialog" aria-labelledby="impDlgTitle">
       <div class="dlg-head">
-        <h3 id="impDlgTitle">Restore backup</h3>
+        <h3 id="impDlgTitle">Import bookmarks</h3>
         <p id="impSummary"></p>
       </div>
       <div class="dlg-foot">
@@ -3765,21 +3742,65 @@
           applyClock();
         });
 
-        /* ---------- export ---------- */
+        /* ---------- HTML escaping helper ---------- */
+        function escapeHtml(s) {
+          return str(s)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+        }
+
+        /* ---------- export bookmarks HTML (Netscape format) ---------- */
+        function generateBookmarksHtml() {
+          const now = Math.floor(Date.now() / 1000);
+          const meta = {
+            version: VERSION,
+            exportedAt: new Date().toISOString(),
+            notes: state.notes,
+            settings: state.settings,
+          };
+          const metaContent = escapeHtml(JSON.stringify(meta));
+          const lines = [
+            "<!DOCTYPE NETSCAPE-Bookmark-file-1>",
+            "<!-- This is an automatically generated file.",
+            "     It will be read and overwritten.",
+            "     DO NOT EDIT! -->",
+            '<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">',
+            `<META NAME="homepage-data" CONTENT="${metaContent}">`,
+            "<TITLE>Bookmarks</TITLE>",
+            "<H1>Bookmarks</H1>",
+            "<DL><p>",
+          ];
+
+          state.groups.forEach(function (g) {
+            const gName = g.name || "Bookmarks";
+            lines.push(
+              `    <DT><H3 ADD_DATE="${now}" LAST_MODIFIED="${now}">${escapeHtml(gName)}</H3>`,
+            );
+            lines.push("    <DL><p>");
+            (g.bookmarks || []).forEach(function (b) {
+              const url = b.url || "";
+              const title = b.title || labelOf(url) || url;
+              const iconAttr = b.icon ? ` ICON="${escapeHtml(b.icon)}"` : "";
+              lines.push(
+                `        <DT><A HREF="${escapeHtml(url)}" ADD_DATE="${now}"${iconAttr}>${escapeHtml(title)}</A>`,
+              );
+            });
+            lines.push("    </DL><p>");
+          });
+
+          lines.push("</DL><p>");
+          return lines.join("\n");
+        }
+
         $("#exportBtn").addEventListener("click", function () {
-          const payload = JSON.stringify(
-            {
-              version: VERSION,
-              exportedAt: new Date().toISOString(),
-              groups: state.groups,
-              notes: state.notes,
-              settings: state.settings,
-            },
-            null,
-            2,
-          );
+          const payload = generateBookmarksHtml();
           try {
-            const blob = new Blob([payload], { type: "application/json" });
+            const blob = new Blob([payload], {
+              type: "text/html;charset=utf-8",
+            });
             const url = URL.createObjectURL(blob);
             const d = new Date();
             const stampName =
@@ -3790,7 +3811,7 @@
               String(d.getDate()).padStart(2, "0");
             const a = el("a", {
               href: url,
-              download: "homepage-backup-" + stampName + ".json",
+              download: "homepage-bookmarks-" + stampName + ".html",
             });
             document.body.append(a);
             a.click();
@@ -3798,30 +3819,21 @@
             setTimeout(function () {
               URL.revokeObjectURL(url);
             }, 4000);
-            toast("Backup downloaded.");
+            toast("Bookmarks HTML downloaded.");
           } catch (e) {
             toast(
-              "Download failed — use “Copy JSON” and paste it into a file instead.",
+              "Download failed — use “Copy HTML” and paste it into a file instead.",
               { kind: "err", ms: 8000 },
             );
           }
         });
 
         $("#copyBtn").addEventListener("click", async function () {
-          const payload = JSON.stringify(
-            {
-              version: VERSION,
-              groups: state.groups,
-              notes: state.notes,
-              settings: state.settings,
-            },
-            null,
-            2,
-          );
+          const payload = generateBookmarksHtml();
           try {
             if (navigator.clipboard && navigator.clipboard.writeText) {
               await navigator.clipboard.writeText(payload);
-              toast("JSON copied to the clipboard.");
+              toast("Bookmarks HTML copied to the clipboard.");
               return;
             }
             throw new Error("no clipboard api");
@@ -3839,8 +3851,8 @@
             ta.remove();
             toast(
               ok
-                ? "JSON copied to the clipboard."
-                : "Could not copy — use “Download backup” instead.",
+                ? "Bookmarks HTML copied to the clipboard."
+                : "Could not copy — use “Export bookmarks HTML” instead.",
               { kind: ok ? undefined : "err" },
             );
           }
@@ -3902,35 +3914,15 @@
           fr.readAsText(file);
         }
 
-        $("#importBtn").addEventListener("click", function () {
-          $("#importFile").click();
-        });
-        $("#importFile").addEventListener("change", function (e) {
-          const file = e.target.files && e.target.files[0];
-          e.target.value = "";
-          if (!file) return;
-          readTextFile(file, 8 * 1024 * 1024, function (text) {
-            let parsed;
-            try {
-              parsed = JSON.parse(text);
-            } catch (err) {
-              toast("That file is not valid JSON.", { kind: "err" });
-              return;
-            }
-            openImportDialog(coerce(parsed));
-          });
-        });
-
-        /* ---------- import a browser's bookmarks HTML (Netscape format) ----------
-   Edge, Chrome and Firefox all export the same shape: a folder is an <H3>
-   immediately followed by the <DL> holding its contents, so a DL's name is the
-   last H3 before it in document order. Folder nesting comes from the DL
-   ancestry. The toolbar folder ("Favourites Bar") is dropped only when there
-   is a real folder beneath it, so "Favourites Bar > RealPage" becomes
-   "RealPage" while links sitting directly on the bar still get their own
-   "Favourites Bar" group instead of being lumped in with loose root links. */
-        function parseBookmarksHtml(text) {
-          const doc = new DOMParser().parseFromString(text, "text/html");
+        /* ---------- import bookmarks HTML (Netscape format) ----------
+           Edge, Chrome, Firefox and Safari all export the same shape: a folder is an <H3>
+           immediately followed by the <DL> holding its contents, so a DL's name is the
+           last H3 before it in document order. Folder nesting comes from the DL
+           ancestry. The toolbar folder ("Favourites Bar") is dropped only when there
+           is a real folder beneath it, so "Favourites Bar > RealPage" becomes
+           "RealPage" while links sitting directly on the bar still get their own
+           "Favourites Bar" group instead of being lumped in with loose root links. */
+        function parseBookmarksHtmlDoc(doc) {
           const named = new Map();
           let lastH3 = null;
           Array.from(doc.querySelectorAll("h3, dl")).forEach(function (n) {
@@ -3999,18 +3991,43 @@
           return { groups: groups, skipped: skipped, dupes: dupes };
         }
 
-        $("#importHtmlBtn").addEventListener("click", function () {
-          $("#importHtmlFile").click();
+        $("#importBtn").addEventListener("click", function () {
+          $("#importFile").click();
         });
-        $("#importHtmlFile").addEventListener("change", function (e) {
+        $("#importFile").addEventListener("change", function (e) {
           const file = e.target.files && e.target.files[0];
           e.target.value = "";
           if (!file) return;
           readTextFile(file, 20 * 1024 * 1024, function (text) {
-            const items = parseBookmarksHtml(text);
-            if (!items.length) {
+            const trimmed = text.trim();
+            if (trimmed.startsWith("{")) {
+              try {
+                const parsed = JSON.parse(trimmed);
+                openImportDialog(coerce(parsed));
+                return;
+              } catch (err) {
+                toast("That file is not valid JSON.", { kind: "err" });
+                return;
+              }
+            }
+
+            const doc = new DOMParser().parseFromString(text, "text/html");
+            let embeddedNotes = [];
+            let embeddedSettings = null;
+            const metaTag = doc.querySelector('meta[name="homepage-data"]');
+            if (metaTag && metaTag.getAttribute("content")) {
+              try {
+                const meta = JSON.parse(metaTag.getAttribute("content"));
+                if (meta && Array.isArray(meta.notes)) embeddedNotes = meta.notes;
+                if (meta && meta.settings && typeof meta.settings === "object")
+                  embeddedSettings = meta.settings;
+              } catch (e) {}
+            }
+
+            const items = parseBookmarksHtmlDoc(doc);
+            if (!items.length && !embeddedNotes.length) {
               toast(
-                "No bookmarks were found in that file — is it a bookmarks export?",
+                "No bookmarks were found in that file — is it a bookmarks HTML export?",
                 { kind: "err", ms: 8000 },
               );
               return;
@@ -4033,12 +4050,19 @@
                   (res.dupes === 1 ? "" : "s") +
                   " dropped",
               );
+
+            const coercedMeta = coerce({
+              groups: res.groups,
+              notes: embeddedNotes,
+              settings: embeddedSettings || state.settings,
+            });
+
             openImportDialog(
               {
                 version: VERSION,
-                groups: res.groups,
-                notes: [],
-                settings: clone(state.settings),
+                groups: coercedMeta.groups,
+                notes: coercedMeta.notes,
+                settings: coercedMeta.settings,
               },
               notes.length ? "(" + notes.join(", ") + ".)" : "",
             );
@@ -4059,7 +4083,7 @@
               state.notes = inc.notes;
               state.settings = inc.settings;
             },
-            { undo: "Everything replaced from the backup" },
+            { undo: "Everything replaced from bookmarks import" },
           );
           applyTheme();
           applyClock();

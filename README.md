@@ -48,7 +48,7 @@ Most start pages make you scroll, or hide your links behind folders, or want an 
 
 **Data**
 
-- One-click **JSON backup** and restore
+- One-click **HTML bookmarks export** and import (standard Netscape format compatible with Chrome, Edge, Firefox, and Safari)
 - **Import your existing browser bookmarks** straight from an Edge / Chrome / Firefox HTML export
 
 ---
@@ -90,7 +90,7 @@ Everything is stored in `localStorage` under the single key `homepage.v1`. Nothi
 
 **That cuts both ways.** Clearing your browser's "cookies and other site data" erases it, as does a browser profile reset. There is no cloud copy and no undo for that.
 
-**So take a backup.** ⚙ Settings → **Download backup** writes a JSON file with your groups, notes and preferences. **Restore from file…** brings it back, on this machine or any other. **Copy JSON** is there if downloads are awkward.
+**So take a backup.** ⚙ Settings → **Export bookmarks HTML** writes a standard HTML bookmarks file with your groups, bookmarks, notes and preferences. **Import bookmarks HTML…** brings it back, on this machine or any other, or lets you bring in bookmarks from Edge, Chrome, or Firefox. **Copy HTML** is there if downloads are awkward.
 
 The stored shape is plain and hand-editable:
 
